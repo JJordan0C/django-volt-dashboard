@@ -48,3 +48,4 @@ def create_table(table_name, fields, options, app_label):
     migration = Migration(table_name, app_label)
     with connection.schema_editor(atomic=True) as schema_editor:
         migration.apply(executor._create_project_state(), schema_editor)
+        

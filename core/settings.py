@@ -1,10 +1,6 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os, environ
 from   unipath import Path
+from django.db import models
 
 env = environ.Env(
     # set casting, default value
@@ -41,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.home',  # Enable the inner home (home)
-    'apps.quote'
+    'quote'
 ]
 
 MIDDLEWARE = [
@@ -148,3 +144,42 @@ STATICFILES_DIRS = (
 
 #############################################################
 #############################################################
+
+# DEALER_TABLES = [
+#     {
+#         'name': 'QuoteTypes',
+#         'fields': {
+#             'id': models.AutoField(primary_key=True) ,
+#             'name': models.CharField(max_length=50, blank=True ),
+#         }
+#     }, 
+#     {
+#         'name': 'Competitions',
+#         'fields': {
+#             'id': models.AutoField(primary_key=True) ,
+#             'name': models.CharField(max_length=50),
+#         }
+#     },
+#     {
+#         'name': 'Events',
+#         'fields': {
+#             'id': models.AutoField(primary_key=True) ,
+#             'name': models.CharField(max_length=50),
+#             'competition_id': lambda x: models.ForeignKey(to=f'quote.{x}Competitions', on_delete=models.deletion.CASCADE)
+#         }
+#     },
+#     {
+#         'name': 'EventQuote',
+#         'fields': {
+#             'id': models.AutoField(primary_key=True) ,
+#             'name': models.CharField(max_length=50),
+#             'event_id': lambda x: models.ForeignKey(to=f'quote.{x}Events', on_delete=models.deletion.CASCADE),
+#             'qt_id': lambda x: models.ForeignKey(to=f'quote.{x}QuoteTypes', on_delete=models.deletion.CASCADE),
+#             'quote': models.FloatField()
+#         }
+#     }
+
+# ] 
+
+QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquoteall.aspx?book={dealer_id}&sport=0"
+
