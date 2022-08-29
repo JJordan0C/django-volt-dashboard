@@ -8,26 +8,27 @@ __pycache__/
 
 # database & logs
 *.db
-*.sqlite3
+#*.sqlite3
 *.log
 
 # venv
 env
 venv
+v_env
 
 # other
 .DS_Store
 
 # javascript
-package-lock.json
+#package-lock.json
 
 staticfiles/*
 !staticfiles/.gitkeep
 .vscode/symbols.json
 
-apps/static/assets/node_modules
-apps/static/assets/yarn.lock
-apps/static/assets/.temp
+#apps/static/assets/node_modules
+#apps/static/assets/yarn.lock
+#apps/static/assets/.temp
 
 # .env
 .env
