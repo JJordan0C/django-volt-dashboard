@@ -36,8 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'apps.home',  # Enable the inner home (home)
-    'quote'
+    'quote',
+    
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +186,5 @@ STATICFILES_DIRS = (
 
 QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquoteall.aspx?book={dealer_id}&sport=0"
 
+#DJANGO APSCHEDULER
+APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"
