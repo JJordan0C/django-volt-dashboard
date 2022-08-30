@@ -4,135 +4,177 @@ from django.conf import settings
 
 # Create your models here.
 
+
 class Dealer(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, null=True)   
-    
+    name = models.CharField(max_length=50, unique=True, null=True)
+
     class SUB_MODEL:
-        QUOTE_TYPES = 'QuoteTypes'
-        COMPETITIONS = 'Competitions'
-        EVENTS = 'Events'
+        QUOTE_TYPE = 'QuoteType'
+        COMPETITION = 'Competition'
+        EVENT = 'Event'
         EVENTQUOTE = 'EventQuote'
 
-    class Meta:  
+    class Meta:
         db_table = "dealers"
-        
+
     def get_sub_model(self, sub_model):
         return globals()[f'{self.name}{sub_model}']
-    
 
-class GoldbetQuoteTypes(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, blank=True )
 
-class GoldbetCompetitions(models.Model):
+class GoldbetQuoteType(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, unique=True, blank=True)
+	class Meta:
+		db_table = 'goldbet_quote_types'
 
-class GoldbetEvents(models.Model):
+class GoldbetCompetition(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	competition_id = models.ForeignKey(to=f'quote.GoldbetCompetitions', on_delete=models.deletion.CASCADE)
+	name = models.CharField(max_length=50, unique=True)
+	pal = models.IntegerField()
+	class Meta:
+		db_table = 'goldbet_competitions'
+
+
+class GoldbetEvent(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=50, unique=True)
+	competition_id = models.ForeignKey(to=f'quote.GoldbetCompetition', on_delete=models.deletion.CASCADE)
 	data = models.DateTimeField(null=True)
 	fast_code = models.IntegerField( null=True)
 	avv = models.IntegerField( null=True)
+	class Meta:
+		db_table = 'goldbet_events'
 
 class GoldbetEventQuote(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
 	event_id = models.ForeignKey(to=f'quote.GoldbetEvents', on_delete=models.deletion.CASCADE)
 	qt_id = models.ForeignKey(to=f'quote.GoldbetQuoteTypes', on_delete=models.deletion.CASCADE)
 	quote = models.FloatField()
+	class Meta:
+		db_table = 'goldbet_events_quote'
 
-class SnaiQuoteTypes(models.Model):
+class SnaiQuoteType(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, blank=True )
+	name = models.CharField(max_length=50, unique=True, blank=True )
+	class Meta:
+		db_table = 'snai_quote_types'
 
-class SnaiCompetitions(models.Model):
+class SnaiCompetition(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, unique=True)
+	pal = models.IntegerField()
+	class Meta:
+		db_table = 'snai_competitions'
 
-class SnaiEvents(models.Model):
+class SnaiEvent(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	competition_id = models.ForeignKey(to=f'quote.SnaiCompetitions', on_delete=models.deletion.CASCADE)
+	name = models.CharField(max_length=50, unique=True)
+	competition_id = models.ForeignKey(to=f'quote.SnaiCompetition', on_delete=models.deletion.CASCADE)
 	data = models.DateTimeField(null=True)
 	fast_code = models.IntegerField( null=True)
 	avv = models.IntegerField( null=True)
+	class Meta:
+		db_table = 'snai_events'
 
 class SnaiEventQuote(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
 	event_id = models.ForeignKey(to=f'quote.SnaiEvents', on_delete=models.deletion.CASCADE)
 	qt_id = models.ForeignKey(to=f'quote.SnaiQuoteTypes', on_delete=models.deletion.CASCADE)
 	quote = models.FloatField()
+	class Meta:
+		db_table = 'snai_events_quote'
 
-class EurobetQuoteTypes(models.Model):
+class EurobetQuoteType(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, blank=True )
+	name = models.CharField(max_length=50, unique=True, blank=True )
+	class Meta:
+		db_table = 'eurobet_quote_types'
 
-class EurobetCompetitions(models.Model):
+class EurobetCompetition(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, unique=True)
+	pal = models.IntegerField()
+	class Meta:
+		db_table = 'eurobet_competitions'
 
-class EurobetEvents(models.Model):
+class EurobetEvent(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	competition_id = models.ForeignKey(to=f'quote.EurobetCompetitions', on_delete=models.deletion.CASCADE)
+	name = models.CharField(max_length=50, unique=True)
+	competition_id = models.ForeignKey(to=f'quote.EurobetCompetition', on_delete=models.deletion.CASCADE)
 	data = models.DateTimeField(null=True)
 	fast_code = models.IntegerField( null=True)
 	avv = models.IntegerField( null=True)
+	class Meta:
+		db_table = 'eurobet_events'
 
 class EurobetEventQuote(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	event_id = models.ForeignKey(to=f'quote.EurobetEvents', on_delete=models.deletion.CASCADE)
-	qt_id = models.ForeignKey(to=f'quote.EurobetQuoteTypes', on_delete=models.deletion.CASCADE)
+	event_id = models.ForeignKey(to=f'quote.EurobetEvent', on_delete=models.deletion.CASCADE)
+	qt_id = models.ForeignKey(to=f'quote.EurobetQuoteType', on_delete=models.deletion.CASCADE)
 	quote = models.FloatField()
+	class Meta:
+		db_table = 'eurobet_events_quote'
 
-class PlanetcoinQuoteTypes(models.Model):
+class PlanetcoinQuoteType(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, blank=True )
+	name = models.CharField(max_length=50, unique=True, blank=True )
+	class Meta:
+		db_table = 'planetcoin_quote_types'
 
-class PlanetcoinCompetitions(models.Model):
+class PlanetcoinCompetition(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, unique=True)
+	pal = models.IntegerField()
+	class Meta:
+		db_table = 'planetcoin_competitions'
 
-class PlanetcoinEvents(models.Model):
+class PlanetcoinEvent(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	competition_id = models.ForeignKey(to=f'quote.PlanetcoinCompetitions', on_delete=models.deletion.CASCADE)
+	name = models.CharField(max_length=50, unique=True)
+	competition_id = models.ForeignKey(to=f'quote.PlanetcoinCompetition', on_delete=models.deletion.CASCADE)
 	data = models.DateTimeField(null=True)
 	fast_code = models.IntegerField( null=True)
 	avv = models.IntegerField( null=True)
+	class Meta:
+		db_table = 'planetcoin_events'
 
 class PlanetcoinEventQuote(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	event_id = models.ForeignKey(to=f'quote.PlanetcoinEvents', on_delete=models.deletion.CASCADE)
-	qt_id = models.ForeignKey(to=f'quote.PlanetcoinQuoteTypes', on_delete=models.deletion.CASCADE)
+	event_id = models.ForeignKey(to=f'quote.PlanetcoinEvent', on_delete=models.deletion.CASCADE)
+	qt_id = models.ForeignKey(to=f'quote.PlanetcoinQuoteType', on_delete=models.deletion.CASCADE)
 	quote = models.FloatField()
+	class Meta:
+		db_table = 'planetcoin_events_quote'
 
-class StanleybetQuoteTypes(models.Model):
+class StanleybetQuoteType(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50, blank=True )
+	name = models.CharField(max_length=50, unique=True, blank=True )
+	class Meta:
+		db_table = 'stanleybet_quote_types'
 
-class StanleybetCompetitions(models.Model):
+class StanleybetCompetition(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, unique=True)
+	pal = models.IntegerField()
+	class Meta:
+		db_table = 'stanleybet_competitions'
 
-class StanleybetEvents(models.Model):
+class StanleybetEvent(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	competition_id = models.ForeignKey(to=f'quote.StanleybetCompetitions', on_delete=models.deletion.CASCADE)
+	name = models.CharField(max_length=50, unique=True)
+	competition_id = models.ForeignKey(to=f'quote.StanleybetCompetition', on_delete=models.deletion.CASCADE)
 	data = models.DateTimeField(null=True)
 	fast_code = models.IntegerField( null=True)
 	avv = models.IntegerField( null=True)
+	class Meta:
+		db_table = 'stanleybet_competitions'
 
 class StanleybetEventQuote(models.Model):
 	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	event_id = models.ForeignKey(to=f'quote.StanleybetEvents', on_delete=models.deletion.CASCADE)
-	qt_id = models.ForeignKey(to=f'quote.StanleybetQuoteTypes', on_delete=models.deletion.CASCADE)
+	event_id = models.ForeignKey(to=f'quote.StanleybetEvent', on_delete=models.deletion.CASCADE)
+	qt_id = models.ForeignKey(to=f'quote.StanleybetQuoteType', on_delete=models.deletion.CASCADE)
 	quote = models.FloatField()
+	class Meta:
+		db_table = 'stanleybet_events_quote'
 
