@@ -24,8 +24,8 @@ class QuoteView(View):
         if request.user.is_superuser:
             dealer = dealer[0]
         
-        competitions = dealer.get_sub_model(dealer.SUB_MODELS.COMPETITION).objects.all()
-        quote_types = dealer.get_sub_model(dealer.SUB_MODELS.QUOTE_TYPE).objects.all()
+        competitions = dealer.get_sub_model(dealer.SUB_MODEL.COMPETITION).objects.all()
+        quote_types = dealer.get_sub_model(dealer.SUB_MODEL.QUOTE_TYPE).objects.all()
         
         context = {
             'competitions' : competitions,
