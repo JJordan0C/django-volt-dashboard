@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'apps.home',  # Enable the inner home (home)
-    'quote',
+    'apps.quote',
     
     'django_apscheduler',
+    'bulk_update_or_create',
 ]
 
 MIDDLEWARE = [
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'it-IT'
 
 TIME_ZONE = 'UTC'
 
@@ -184,6 +185,14 @@ STATICFILES_DIRS = (
 
 # ] 
 
+DEALERS = {
+    9 : 'Goldbet',
+    11 : 'Snai',
+    13 : 'Eurobet',
+    14 : 'Planetcoin',
+    15 : 'Stanleybet'
+}
+           
 QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquoteall.aspx?book={dealer_id}&sport=0"
 
 #DJANGO APSCHEDULER
