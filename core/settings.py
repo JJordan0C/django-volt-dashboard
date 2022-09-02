@@ -30,7 +30,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     
     'apps.home',  # Enable the inner home (home)
     'apps.quote',
+    'apps.authentication.config.AuthConfig',
     
     'django_apscheduler',
     'bulk_update_or_create',
@@ -184,6 +185,8 @@ STATICFILES_DIRS = (
 #     }
 
 # ] 
+
+AUTH_USER_MODEL = 'apps_auth.User' 
 
 DEALERS = {
     9 : 'Goldbet',

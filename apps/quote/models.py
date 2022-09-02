@@ -108,6 +108,9 @@ class Dealer:
         
     def all():
         return [Dealer(id=id, name=name) for id, name in settings.DEALERS.items()]
+    
+    def get(id):
+        return Dealer(id=id, name=settings.DEALERS[id]) if id in settings.DEALERS.keys() else None
 
     def get_sub_model(self, sub_model):
         return globals()[f'{self.name}{sub_model}']
