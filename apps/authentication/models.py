@@ -15,6 +15,6 @@ class User(AbstractUser):
    
    def get_dealer(self):
        if self.dealer_id and not self.is_superuser:
-           return Dealer.get(self.dealer_id)
+           return Dealer.get(id=self.dealer_id)
        
-       return Dealer.all()
+       return Dealer.all()[0]

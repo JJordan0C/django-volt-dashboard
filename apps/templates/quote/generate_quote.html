@@ -3,7 +3,10 @@
 {% block title %} Generate Quote {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<link type='text/css' href="{{ ASSETS_ROOT }}/vendor/smartwizard/css/smart_wizard_all.min.css" rel="stylesheet">
+
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -41,13 +44,13 @@
             Step content
         </div>
         <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
-            Step content
+            Step content2
         </div>
         <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-            Step content
+            Step content3
         </div>
         <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
-            Step content
+            Step content4
         </div>
     </div>
  
@@ -60,4 +63,7 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="{{ ASSETS_ROOT }}/vendor/smartwizard/js/jquery.smartWizard.min.js"></script>
+<script src="{{ ASSETS_ROOT }}/js/quote/generate_quote.js"></script>
+{% endblock javascripts %}

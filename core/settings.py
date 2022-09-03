@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # login middleware
-    'apps.quote.middleware.AuthMiddleware',
+    'apps.authentication.middleware.AuthMiddleware',
 ]
 
 LOGIN_URL = '/auth/login/'

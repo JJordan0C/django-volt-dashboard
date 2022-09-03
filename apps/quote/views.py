@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import *
 from django.views import View
-
+from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
         
 class TestView(View):
@@ -12,8 +12,11 @@ class TestView(View):
         
 class DashboardView(View):
     def get(self, request):
-        print('io')
         return render(request, 'home/dashboard.html')
+    
+class IndexView(View):
+    def get(self, request):
+        return HttpResponseRedirect('dashboard')
     
 
 class QuoteView(View):
@@ -21,11 +24,9 @@ class QuoteView(View):
     def get(self, request):
         
         dealer = request.user.get_dealer()
-        if request.user.is_superuser:
-            dealer = dealer[0]
         
-        competitions = dealer.get_sub_model(dealer.SUB_MODEL.COMPETITION).objects.all()
-        quote_types = dealer.get_sub_model(dealer.SUB_MODEL.QUOTE_TYPE).objects.all()
+        competitions = dealer.get_sub_model(Dealer.SUB_MODEL.COMPETITION).objects.all()
+        quote_types = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE).objects.all()
         
         context = {
             'competitions' : competitions,
@@ -33,3 +34,14 @@ class QuoteView(View):
         }
                 
         return render(request, 'quote/generate_quote.html', context=context)
+    
+    def post(self, request):
+        type = request.POST.get('type')
+        if type == 'get_matches':
+            Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
+            matches = []
+            for c in Competition.objects.filter(id__in=request.POST.get('competition_ids')):
+                matches.append(c.matches)
+                
+            return HttpResponse(matches)
+            

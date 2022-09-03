@@ -2,6 +2,7 @@ from django.db import models
 from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 import re
 from django.conf import settings
+from core.utils import get_key_from_value
 
 def simple_plural(word):
     if word[-1] == "y":
@@ -27,6 +28,10 @@ class BaseQuoteModel(models.Model):
     @property
     def dealer_name(self):
         return re.findall('[a-zA-Z][^A-Z]*', self.__class__.__name__)[0]
+    
+    @property
+    def dealer(self):
+        return Dealer.get(id=get_key_from_value(settings.DEALERS, self.dealer_name))
         
     class Meta:
         abstract=True
@@ -45,6 +50,10 @@ class BaseCompetition(BaseQuoteModel):
     
     class Meta:
         abstract = True
+
+    @property
+    def matches(self):
+        return self.dealer.get_sub_model(Dealer.SUB_MODEL.EVENT).objects.filter(competition_id=self.id) 
 
 class BaseForeignKey(models.ForeignKey):
     
@@ -109,8 +118,16 @@ class Dealer:
     def all():
         return [Dealer(id=id, name=name) for id, name in settings.DEALERS.items()]
     
-    def get(id):
-        return Dealer(id=id, name=settings.DEALERS[id]) if id in settings.DEALERS.keys() else None
+    def get(id:int = None, name:str = None):
+        r = None
+        if id:
+            r = Dealer(id=id, name=settings.DEALERS[id]) if id in settings.DEALERS.keys() else None
+        
+        if name:
+            id = get_key_from_value(settings.DEALERS, name)
+            r = Dealer(id=id, name=name) if id in settings.DEALERS.keys() else None
+            
+        return r
 
     def get_sub_model(self, sub_model):
         return globals()[f'{self.name}{sub_model}']
