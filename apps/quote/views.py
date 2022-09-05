@@ -59,35 +59,39 @@ class QuoteToPDFView(View):
         QuoteType = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE)
         Event = dealer.get_sub_model(Dealer.SUB_MODEL.EVENT)
         EventQuote = dealer.get_sub_model(Dealer.SUB_MODEL.EVENTQUOTE)
-        # quote_types = [{
-        #         'quote': qt.get_super_quote(),
-        #         'sub_quotes': [x.name.split('|')[-1] for x in qt.get_sub_quotes()]
-        #     } for qt in QuoteType.objects.filter(id__in=data_example['quote_type_ids'])]
+        
         quote_types = QuoteType.objects.filter(id__in=data_example['quote_type_ids'])
-        
-        # MANIFESTAZIONE	Data/Ora	CODE	AVVENIMENTO
-        
         dataframe_data = []
         
         for e in Event.objects.filter(id__in=data_example['match_ids']):
             #print(type(getattr(e, EventQuote.__name__.lower() + '_set').get().quote.encode()))
-            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower() + '_set').get().quote)[sub.id] for qt in quote_types for sub in qt.get_sub_quotes())
+            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower() + '_set').get().quote)[qt.id] for qt in quote_types)
             dataframe_data.append(
                 (
                     e.competition.name, # MANIFESTAZIONE
-                    e.data, # DATA
+                    e.data.strftime("%d/%m/%Y %H:%M"), # DATA
                     e.fast_code, # FASTCODE
                     e.name, #AVVENIMENTO
                 ) + quotes
             )
         print(dataframe_data)
         
-        df = pd.DataFrame(dataframe_data).set_index([0,1,2,3])
-        df.index.names=['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
-        cols = pd.MultiIndex.from_tuples([ (qt.get_super_quote(), sub.name.split('|')[-1]) for qt in quote_types for sub in qt.get_sub_quotes()])
-        df.columns = cols
-        print([ (qt.get_super_quote(), sub.name.split('|')[-1]) for qt in quote_types for sub in qt.get_sub_quotes()])
-        return HttpResponse(df.to_html())
+        df = pd.DataFrame(dataframe_data)#.set_index([0,1,2,3])
+        # df.index.names=
+        cols = ['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
+        print([(x, '') for x in cols] + [(qt.get_super_quote(), qt.get_sub_quote()) for qt in quote_types])
+        cols = pd.MultiIndex.from_tuples([(x, '') for x in cols] + [(qt.get_super_quote(), qt.get_sub_quote()) for qt in quote_types])
+        df.columns = cols 
+        writer = pd.ExcelWriter('goldbet.xlsx') 
+        df.to_excel(writer, index=False , sheet_name='goldbet', na_rep='NaN')
+        # # Auto-adjust columns' width
+        # for column in df:
+        #     column_width = max(df[column].astype(str).map(len).max(), len(column))
+        #     col_idx = df.columns.get_loc(column)
+        #     writer.sheets['goldbet'].set_column(col_idx, col_idx, column_width)
+
+        writer.save()
+        return HttpResponse(True)
 
         
         
