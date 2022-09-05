@@ -42,6 +42,18 @@ class BaseQuoteType(BaseQuoteModel):
     
     class Meta:
         abstract = True
+        
+    def has_sub_quotes(self):
+        return '|' in self.name
+    
+    def get_sub_quotes(self):
+        if not self.has_sub_quotes():
+            return None
+        to_search = self.get_super_quote() + '|'
+        return self.__class__.objects.filter(name__contains=to_search)
+    
+    def get_super_quote(self):
+        return self.name.split('|')[0]
     
 
 class BaseCompetition(BaseQuoteModel):
