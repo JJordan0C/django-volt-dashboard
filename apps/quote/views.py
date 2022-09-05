@@ -70,18 +70,24 @@ class QuoteToPDFView(View):
         dataframe_data = []
         
         for e in Event.objects.filter(id__in=data_example['match_ids']):
-            quotes = list( getattr(e, EventQuote.__class__.__name__.lower()).get().quote[sub.id] for qt in quote_types for sub in qt.get_sub_quotes())
-            print(quotes)
+            #print(type(getattr(e, EventQuote.__name__.lower() + '_set').get().quote.encode()))
+            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower() + '_set').get().quote)[sub.id] for qt in quote_types for sub in qt.get_sub_quotes())
             dataframe_data.append(
                 (
                     e.competition.name, # MANIFESTAZIONE
                     e.data, # DATA
                     e.fast_code, # FASTCODE
                     e.name, #AVVENIMENTO
-                )
+                ) + quotes
             )
-            
         print(dataframe_data)
+        
+        df = pd.DataFrame(dataframe_data).set_index([0,1,2,3])
+        df.index.names=['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
+        cols = pd.MultiIndex.from_tuples([ (qt.get_super_quote(), sub.name.split('|')[-1]) for qt in quote_types for sub in qt.get_sub_quotes()])
+        df.columns = cols
+        print([ (qt.get_super_quote(), sub.name.split('|')[-1]) for qt in quote_types for sub in qt.get_sub_quotes()])
+        return HttpResponse(df.to_html())
 
         
         

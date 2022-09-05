@@ -3,6 +3,8 @@ from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 import re
 from django.conf import settings
 from core.utils import get_key_from_value
+from json import JSONDecoder, JSONEncoder
+import orjson
 
 def simple_plural(word):
     if word[-1] == "y":
@@ -52,6 +54,9 @@ class BaseQuoteType(BaseQuoteModel):
         to_search = self.get_super_quote() + '|'
         return self.__class__.objects.filter(name__contains=to_search)
     
+    def get_sub_quote(self):
+        return self.name.split('|')[-1]
+    
     def get_super_quote(self):
         return self.name.split('|')[0]
     
@@ -90,7 +95,7 @@ class BaseEvent(BaseQuoteModel):
     class Meta:
         abstract = True
         # fields = ('name', 'data', 'fast_code', 'avv', 'competition_id')
-     
+
 class BaseEventQuote(BaseQuoteModel):
     
     #quote = models.FloatField(null=True)
