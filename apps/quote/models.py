@@ -48,15 +48,18 @@ class BaseQuoteType(BaseQuoteModel):
     def has_sub_quotes(self):
         return '|' in self.name
     
+    @property
     def get_sub_quotes(self):
         if not self.has_sub_quotes():
             return None
         to_search = self.get_super_quote() + '|'
         return self.__class__.objects.filter(name__contains=to_search)
     
+    @property
     def get_sub_quote(self):
         return self.name.split('|')[-1]
     
+    @property
     def get_super_quote(self):
         return self.name.split('|')[0]
     

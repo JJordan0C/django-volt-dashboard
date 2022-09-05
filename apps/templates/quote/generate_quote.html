@@ -5,6 +5,8 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <link type='text/css' href="{{ ASSETS_ROOT }}/vendor/smartwizard/css/smart_wizard_all.min.css" rel="stylesheet">
+<link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
 
 {% endblock stylesheets %}
 
@@ -16,41 +18,129 @@
         <li class="nav-item">
           <a class="nav-link" href="#step-1">
             <div class="num">1</div>
-            Step Title
+            Selezione Campionati
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#step-2">
             <span class="num">2</span>
-            Step Title
+            Selezione Match
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#step-3">
             <span class="num">3</span>
-            Step Title
+            Selezione Giocata
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link " href="#step-4">
             <span class="num">4</span>
-            Step Title
+            Tabella finale
           </a>
         </li>
     </ul>
  
     <div class="tab-content">
         <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
-            Step content
+          <table id="championship" class="display" style="width:100%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Campionato</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for competition in competitions %}
+              <tr>
+                <td></td>
+                <td>{{competition.name}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Campionato</th>
+              </tr>
+           </tfoot>
+          </table>   
         </div>
         <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
-            Step content2
+          <table id="matches" class="display" style="width:100%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Match</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for match in matches %}
+              <tr>
+                <td></td>
+                <td>{{match.name}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Match</th>
+              </tr>
+           </tfoot>
+          </table>         
         </div>
         <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-            Step content3
+          <table id="quote" class="display" style="width:100%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Tipologia giocata</th>
+                <th>Giocata</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for qt in quote_types %}
+              <tr>
+                <td></td>
+                <td>{{qt.get_super_quote}}</td>
+                <td>{{qt.get_sub_quote}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Tipologia giocata</th>
+                <th>Giocata</th>
+              </tr>
+           </tfoot>
+          </table>
         </div>
         <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
-            Step content4
+          <table id="result" class="display" style="width:100%">
+            <thead>
+              <tr>
+                <th>Campionato</th>
+                <th>Partita</th>
+                <th>Giocata</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Campionato</th>
+                <th>Partita</th>
+                <th>Giocata</th>
+              </tr>
+           </tfoot>
+          </table>
         </div>
     </div>
  
@@ -66,4 +156,6 @@
 {% block javascripts %}
 <script src="{{ ASSETS_ROOT }}/vendor/smartwizard/js/jquery.smartWizard.min.js"></script>
 <script src="{{ ASSETS_ROOT }}/js/quote/generate_quote.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
 {% endblock javascripts %}
