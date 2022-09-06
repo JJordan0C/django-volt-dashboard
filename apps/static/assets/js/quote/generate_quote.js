@@ -1,4 +1,5 @@
 $(function() {
+    var selected_matches = []
     function provideContent(idx, stepDirection, stepPosition, selStep, callback) {
         const CSRF_TOKEN = $("[name='csrfmiddlewaretoken']").val();
         // You can use stepDirection to get ajax content on the forward movement and stepPosition to identify the step position
@@ -9,7 +10,7 @@ $(function() {
             url     : "",
             data: {
                 type: "get_matches",
-                competition_ids: 1
+                competition_ids: ""
             },
             headers: {
                 'X-CSRFToken': CSRF_TOKEN
@@ -23,10 +24,8 @@ $(function() {
              * Table
              * Matches
              */
-            console.log(typeof res)
-            console.log(JSON.parse(res))
             $('#matches').DataTable( {
-                dataSet: JSON.parse(res),
+                dataSet: res,
                 pageLength : 15,
                 dom: 'frtip',
                 responsive: true,

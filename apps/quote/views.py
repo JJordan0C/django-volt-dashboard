@@ -48,14 +48,13 @@ class QuoteView(View):
             Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
             matches = []
             for c in Competition.objects.filter(id__in=request.POST.get('competition_ids')):
-                matches.append(serializers.serialize(
-                    'json', c.matches, indent=1, fields=('name',)))
-                # for match in matches:
-                    # matches = json.dumps(matches[0])
-                    # print(matches[0])
-        return JsonResponse(matches[0], safe=False)  # HttpResponse(matches)
-
-
+                matches.append([{
+                    'id': e.id,
+                    'name': e.name
+                } for e in c.matches])
+            return JsonResponse(matches, safe=False) #HttpResponse(matches)
+            
+            
 class QuoteToPDFView(View):
 
     def get(self, request):
