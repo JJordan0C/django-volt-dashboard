@@ -6,96 +6,130 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import pandas as pd
 from django.core import serializers
 # Create your views here.
-        
+
+
 class TestView(View):
     def get(self, request):
         from .quote_parser import parse_quote
         parse_quote()
-        
-        
+
+
 class DashboardView(View):
     def get(self, request):
         return render(request, 'home/dashboard.html')
-    
+
+
 class IndexView(View):
     def get(self, request):
         return HttpResponseRedirect('dashboard')
-    
+
 
 class QuoteView(View):
-    
+
     def get(self, request):
-        
+
         dealer = request.user.get_dealer()
-        
-        competitions = dealer.get_sub_model(Dealer.SUB_MODEL.COMPETITION).objects.all()
-        quote_types = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE).objects.all()
-        
+
+        competitions = dealer.get_sub_model(
+            Dealer.SUB_MODEL.COMPETITION).objects.all()
+        quote_types = dealer.get_sub_model(
+            Dealer.SUB_MODEL.QUOTE_TYPE).objects.all()
+
         context = {
-            'competitions' : competitions,
-            'quote_types' : quote_types
+            'competitions': competitions,
+            'quote_types': quote_types
         }
-                
+
         return render(request, 'quote/generate_quote.html', context=context)
-    
+
     def post(self, request):
         type = request.POST.get('type')
         if type == 'get_matches':
             Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
             matches = []
             for c in Competition.objects.filter(id__in=request.POST.get('competition_ids')):
-                matches.append(serializers.serialize('json', c.matches, indent=1, fields=('name',)))
-                for match in matches:
-            # matches = json.dumps(matches[0])
-            # print(matches[0])
-            return JsonResponse(matches[0], safe=False) #HttpResponse(matches)
-            
-        
+                matches.append(serializers.serialize(
+                    'json', c.matches, indent=1, fields=('name',)))
+                # for match in matches:
+                    # matches = json.dumps(matches[0])
+                    # print(matches[0])
+        return JsonResponse(matches[0], safe=False)  # HttpResponse(matches)
+
+
 class QuoteToPDFView(View):
-    
+
     def get(self, request):
         data_example = {
-            'quote_type_ids': [104,105,106],
-            'match_ids': range(504, 507)
+            'quote_type_ids': range(104, 110),
+            'match_ids': range(504, 517)
         }
         # data = request.POST.get('data')
         dealer = request.user.get_dealer()
         QuoteType = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE)
         Event = dealer.get_sub_model(Dealer.SUB_MODEL.EVENT)
         EventQuote = dealer.get_sub_model(Dealer.SUB_MODEL.EVENTQUOTE)
-        
-        quote_types = QuoteType.objects.filter(id__in=data_example['quote_type_ids'])
-        dataframe_data = []
-        
-        for e in Event.objects.filter(id__in=data_example['match_ids']):
+
+        quote_types = QuoteType.objects.filter(
+            id__in=data_example['quote_type_ids'])
+        events = Event.objects.filter(id__in=data_example['match_ids'])
+        dataframe_data = {e.competition.name: [] for e in events}
+
+        for e in events:
             #print(type(getattr(e, EventQuote.__name__.lower() + '_set').get().quote.encode()))
-            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower() + '_set').get().quote)[qt.id] for qt in quote_types)
-            dataframe_data.append(
+            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower(
+            ) + '_set').get().quote)[qt.id] for qt in quote_types)
+            dataframe_data[e.competition.name].append(
                 (
-                    e.competition.name, # MANIFESTAZIONE
-                    e.data.strftime("%d/%m/%Y %H:%M"), # DATA
-                    e.fast_code, # FASTCODE
-                    e.name, #AVVENIMENTO
+                    # e.competition.name, # MANIFESTAZIONE
+                    # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
+                    e.data.strftime("%d %b - %H:%M"),  # DATA
+                    e.fast_code,  # FASTCODE
+                    e.name,  # AVVENIMENTO
                 ) + quotes
             )
-        print(dataframe_data)
-        
-        df = pd.DataFrame(dataframe_data)#.set_index([0,1,2,3])
+
+        # METHOD 1
+        # df = pd.DataFrame(dataframe_data)#.set_index([0,1,2,3])
         # df.index.names=
-        cols = ['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
-        print([(x, '') for x in cols] + [(qt.get_super_quote(), qt.get_sub_quote()) for qt in quote_types])
-        cols = pd.MultiIndex.from_tuples([(x, '') for x in cols] + [(qt.get_super_quote(), qt.get_sub_quote()) for qt in quote_types])
-        df.columns = cols 
-        writer = pd.ExcelWriter('goldbet.xlsx') 
-        df.to_excel(writer, index=False , sheet_name='goldbet', na_rep='NaN')
-        # # Auto-adjust columns' width
+
+        # cols = ['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
+        #tuples = [(x, '') for x in cols] + [(qt.get_super_quote, qt.get_sub_quote) for qt in quote_types]
+        # cols = pd.MultiIndex.from_tuples(tuples)
+        # df.columns = cols
+        # writer = pd.ExcelWriter('goldbet.xlsx', engine='xlsxwriter')
+        # df.to_excel(writer, sheet_name='goldbet')
+
+        # # # Auto-adjust columns' width
         # for column in df:
         #     column_width = max(df[column].astype(str).map(len).max(), len(column))
         #     col_idx = df.columns.get_loc(column)
         #     writer.sheets['goldbet'].set_column(col_idx, col_idx, column_width)
 
-        writer.save()
-        return HttpResponse(True)
+        # writer.save()
 
-        
-        
+        # METHOD 2
+        class Column:
+            def __init__(self, name: str, sub_columns: list = []):
+                self.name = name
+                self.sub_columns = sub_columns
+
+            def __str__(self):
+                return self.name + ' ' + ','.join(self.sub_columns)
+
+        cols = [
+            Column('MANIFESTAZIONE'),
+            Column('DATA'),
+            Column('FASTCODE'),
+            Column('AVVENIMENTO')
+        ]
+        #cols += [Column(qt.get_super_quote.upper(), qt.get_sub_quote.upper()) for qt in quote_types]
+        to_add = {qt.get_super_quote.upper(): [] for qt in quote_types}
+        [to_add[qt.get_super_quote.upper()].append(qt.get_sub_quote.upper())
+         for qt in quote_types]
+        cols += [Column(key, val) for key, val in to_add.items()]
+        context = {
+            'data': dataframe_data,
+            'columns': cols
+        }
+
+        return render(request, 'quote/table_to_pdf.html', context=context)

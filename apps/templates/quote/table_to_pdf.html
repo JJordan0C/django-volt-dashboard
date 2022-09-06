@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th:not(:empty) {
+            border-style: solid;
+            background-color: lightgray ;
+        }
+
+        td:not(.fastcode) {
+            border-style: solid;
+        }
+
+        .fastcode {
+            border-style: dashed
+        }
+
+    </style>
+    </head>
+
+    <body>
+
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            {% with col.sub_columns|length as sub_col_len%}
+                                {% if sub_col_len > 0 %}
+                                    <th scope="col" colspan="{{sub_col_len}}">{{col.name}}</th>
+                                {% else %}
+                                    <th></th>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for col in columns %}
+                            {% with col.sub_columns|length as sub_col_len%}
+                                {% if sub_col_len == 0 %}
+                                    <th scope="col">{{col.name}}</th>
+                                {% else %}
+                                    {% for c in col.sub_columns%}
+                                        <th scope="col">{{c}}</th>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% comment %} {% for d_tuple in data %}
+                        <tr>
+                            {% for d in d_tuple %}
+                                <td>{{d}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor%} {% endcomment %}
+                    {% for key, val in data.items %}
+                        {% for d_tuple in val %}
+                            <tr>
+                                {% if forloop.counter == 1 %}
+                                    <td rowspan="{{val|length}}">{{key}}</td>
+                                {% endif %}
+                                {% for d in d_tuple%}
+                                    <td {% if forloop.counter == 2%}class="fastcode"{% endif %} >{{d}}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    
+    </body>
+
+</html>
