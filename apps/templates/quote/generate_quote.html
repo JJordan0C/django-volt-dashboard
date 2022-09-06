@@ -13,6 +13,7 @@
 {% block content %}
 
 <!-- SmartWizard html -->
+{% csrf_token %}
 <div id="smartwizard">
     <ul class="nav">
         <li class="nav-item">
@@ -54,7 +55,7 @@
               {% for competition in competitions %}
               <tr>
                 <td></td>
-                <td>{{competition.name}}</td>
+                <td id="champ">{{competition.name}}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -78,7 +79,7 @@
               {% for match in matches %}
               <tr>
                 <td></td>
-                <td>{{match.name}}</td>
+                <td></td>
               </tr>
               {% endfor %}
             </tbody>

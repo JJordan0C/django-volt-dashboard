@@ -1,8 +1,10 @@
+import json
 from django.shortcuts import get_object_or_404, render
 from .models import *
 from django.views import View
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import pandas as pd
+from django.core import serializers
 # Create your views here.
         
 class TestView(View):
@@ -42,9 +44,11 @@ class QuoteView(View):
             Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
             matches = []
             for c in Competition.objects.filter(id__in=request.POST.get('competition_ids')):
-                matches.append(c.matches)
-                
-            return HttpResponse(matches)
+                matches.append(serializers.serialize('json', c.matches, indent=1, fields=('name',)))
+                for match in matches:
+            # matches = json.dumps(matches[0])
+            # print(matches[0])
+            return JsonResponse(matches[0], safe=False) #HttpResponse(matches)
             
         
 class QuoteToPDFView(View):
