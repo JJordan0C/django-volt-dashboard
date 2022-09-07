@@ -1,5 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404, render
+
+from core.utils import html_to_pdf
 from .models import *
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -85,7 +87,7 @@ class QuoteToPDFView(View):
                 (
                     # e.competition.name, # MANIFESTAZIONE
                     # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
-                    e.data.strftime("%a %d/%m - %H:%M"),  # DATA
+                    e.data.strftime("%a %d/%m %H:%M"),  # DATA
                     e.fast_code,  # FASTCODE
                     e.name,  # AVVENIMENTO
                 ) + quotes
