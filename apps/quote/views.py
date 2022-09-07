@@ -5,6 +5,7 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import pandas as pd
 from django.core import serializers
+from locale import setlocale, LC_ALL
 # Create your views here.
 
 
@@ -58,6 +59,9 @@ class QuoteView(View):
 class QuoteToPDFView(View):
 
     def get(self, request):
+        
+        setlocale(LC_ALL, "it_IT")
+        
         data_example = {
             'quote_type_ids': range(104, 110),
             'match_ids': range(504, 517)
@@ -81,7 +85,7 @@ class QuoteToPDFView(View):
                 (
                     # e.competition.name, # MANIFESTAZIONE
                     # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
-                    e.data.strftime("%d %b - %H:%M"),  # DATA
+                    e.data.strftime("%a %d/%m - %H:%M"),  # DATA
                     e.fast_code,  # FASTCODE
                     e.name,  # AVVENIMENTO
                 ) + quotes

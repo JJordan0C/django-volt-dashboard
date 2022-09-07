@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!doctype html>
 <html lang="en">
 
@@ -15,12 +16,13 @@
             background-color: lightgray ;
         }
 
-        td:not(.fastcode) {
-            border-style: solid;
+        td {
+            border: 1px solid;
         }
 
-        .fastcode {
-            border-style: dashed
+        .today-fastcode {
+            background-color = black;
+            color = white;
         }
 
     </style>
@@ -66,12 +68,16 @@
                     {% endfor%} {% endcomment %}
                     {% for key, val in data.items %}
                         {% for d_tuple in val %}
-                            <tr>
+                            <tr class="
+                            
+                            ">
                                 {% if forloop.counter == 1 %}
-                                    <td rowspan="{{val|length}}">{{key}}</td>
+                                    <td rowspan="{{val|length}}" style="border:solid">{{key}}</td>
                                 {% endif %}
                                 {% for d in d_tuple%}
-                                    <td {% if forloop.counter == 2%}class="fastcode"{% endif %} >{{d}}</td>
+                                    <td class="
+                                        {% if forloop.counter == 1 and d_tuple|is_today %}today-fastcode{% endif %}
+                                        " >{{d}}</td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
