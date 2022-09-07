@@ -5,6 +5,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <link type='text/css' href="{{ ASSETS_ROOT }}/vendor/smartwizard/css/smart_wizard_all.min.css" rel="stylesheet">
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/generate_quote.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
 
@@ -42,7 +43,7 @@
         </li>
     </ul>
  
-    <div class="tab-content">
+    <div class="tab-content" id="resize_wrapper">
         <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
           <table id="championship" class="display" style="width:100%">
             <thead>
@@ -54,7 +55,9 @@
             <tbody>
               {% for competition in competitions %}
               <tr>
-                <td></td>
+                <td>
+                  <input type="hidden" name="champ_id" value="{{ competition.id }}">
+                </td>
                 <td>{{competition.name}}</td>
               </tr>
               {% endfor %}
@@ -75,14 +78,6 @@
                 <th>Match</th>
               </tr>
             </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th>Match</th>
-              </tr>
-           </tfoot>
           </table>         
         </div>
         <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">

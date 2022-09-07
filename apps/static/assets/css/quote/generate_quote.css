@@ -20,3 +20,12 @@
     --sw-loader-background-color:  #f8f9fa;
     --sw-loader-background-wrapper-color:  rgba(255, 255, 255, 0.7); 
 }
+
+#resize_wrapper {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    right: 1em;
+    bottom: 12em;
+    box-sizing: border-box;
+}

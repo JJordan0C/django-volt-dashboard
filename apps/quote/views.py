@@ -47,12 +47,12 @@ class QuoteView(View):
         if type == 'get_matches':
             Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
             matches = []
-            for c in Competition.objects.filter(id__in=request.POST.get('competition_ids')):
+            for c in Competition.objects.filter(id__in=request.POST.get('competition_ids[]')):
                 matches.append([{
                     'id': e.id,
                     'name': e.name
                 } for e in c.matches])
-            return JsonResponse(matches, safe=False) #HttpResponse(matches)
+            return JsonResponse(matches, safe=False)
             
             
 class QuoteToPDFView(View):
