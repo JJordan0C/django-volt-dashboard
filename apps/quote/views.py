@@ -65,8 +65,8 @@ class QuoteToPDFView(View):
         setlocale(LC_ALL, "it_IT")
         
         data_example = {
-            'quote_type_ids': range(104, 110),
-            'match_ids': range(504, 517)
+            'quote_type_ids': range(104, 116),
+            'match_ids': range(504, 604)
         }
         # data = request.POST.get('data')
         dealer = request.user.get_dealer()
@@ -124,7 +124,7 @@ class QuoteToPDFView(View):
         cols = [
             Column('MANIFESTAZIONE'),
             Column('DATA'),
-            Column('FASTCODE'),
+            Column('CODE'),
             Column('AVVENIMENTO')
         ]
         #cols += [Column(qt.get_super_quote.upper(), qt.get_sub_quote.upper()) for qt in quote_types]
@@ -134,7 +134,9 @@ class QuoteToPDFView(View):
         cols += [Column(key, val) for key, val in to_add.items()]
         context = {
             'data': dataframe_data,
-            'columns': cols
+            'columns': cols,
+            'dealer_image': str(get_key_from_value(settings.DEALERS, dealer.name)) + '.jpg',
+            'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0]
         }
 
         return render(request, 'quote/table_to_pdf.html', context=context)

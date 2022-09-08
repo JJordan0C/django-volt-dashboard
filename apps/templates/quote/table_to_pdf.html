@@ -7,8 +7,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style>
+        body {
+            font-family: 'Enriqueta', arial, serif;
+        }
+
+        img {
+            width: 200px;
+            top: 0;
+            position: absolute;
+        }
+
         table {
             border-collapse: collapse;
+            margin-top: 4.5%;
         }
 
         tbody {
@@ -27,6 +38,8 @@
 
         td:first-child{
             text-align: center;
+            max-width: 100px;
+            word-wrap:break-word;
         }
 
         .rowspan-border {
@@ -35,103 +48,78 @@
         }
 
         .today-fastcode {
-            background-color = black;
-            color = white;
+            background-color: black;
+            color: white;
+            border-color: black;
+        }
+        
+        .quote {
+            width: 39px;
+            max-width: 40px;
+            word-wrap:break-word;
         }
 
     </style>
     </head>
 
     <body>
-            <table class="table table-primary">
-                <thead>
-                    <tr>
-                        {% for col in columns %}
-                            {% with col.sub_columns|length as sub_col_len%}
-                                {% if sub_col_len > 0 %}
-                                    <th scope="col" colspan="{{sub_col_len}}">{{col.name}}</th>
-                                {% else %}
-                                    <th></th>
-                                {% endif %}
-                            {% endwith %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        {% for col in columns %}
-                            {% with col.sub_columns|length as sub_col_len%}
-                                {% if sub_col_len == 0 %}
-                                    <th scope="col">{{col.name}}</th>
-                                {% else %}
-                                    {% for c in col.sub_columns%}
-                                        <th scope="col">{{c}}</th>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endwith %}
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% comment %} {% for d_tuple in data %}
-                        <tr>
-                            {% for d in d_tuple %}
-                                <td>{{d}}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor%} {% endcomment %}
-                    {% for key, val in data.items %}
-                        {% for d_tuple in val %}
-                        <tr>
-                            {% if forloop.counter == 1 %}
-                            <td rowspan="{{val|length}}" class="rowspan-border" >{{key}}</td>
+        <img src="{{ASSETS_ROOT}}/img/dealers/{{dealer_image}}"/>
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        {% with col.sub_columns|length as sub_col_len%}
+                            {% if sub_col_len > 0 %}
+                                <th scope="col" colspan="{{sub_col_len}}">{{col.name}}</th>
+                            {% else %}
+                                <th></th>
                             {% endif %}
-                            {% for d in d_tuple%}
-                                <td class="{% if forloop.counter == 1 and d_tuple|is_today %}today-fastcode{% endif %}" >{{d}}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endfor %}
+                        {% endwith %}
                     {% endfor %}
-                </tbody>
-            </table>
+                </tr>
+                <tr>
+                    {% for col in columns %}
+                        {% with col.sub_columns|length as sub_col_len%}
+                            {% if sub_col_len == 0 %}
+                                <th scope="col">{{col.name}}</th>
+                            {% else %}
+                                {% append_lbi forloop.counter sub_col_len %}
+                                {% for c in col.sub_columns%}
+                                    <th scope="col" data-sub-col="true" class="quote">{{c}}</th>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% comment %} {% for d_tuple in data %}
+                    <tr>
+                        {% for d in d_tuple %}
+                            <td>{{d}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor%} {% endcomment %}
+                {% for key, val in data.items %}
+                    {% for d_tuple in val %}
+                    <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
+                        
+                        {% if forloop.counter == 1 %}
+                            <td rowspan="{{val|length}}" class="rowspan-border" >{{key}}</td>
+                        {% endif %}
+
+                        {% for d in d_tuple%}
+                            <td class="{% if forloop.counter == 2 and d_tuple|is_today %}today-fastcode{% endif %}"
+                            style="{% if forloop.counter|is_in_lbi %}border-left:solid{% endif %}" >{{d}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
-    <script>
-        window.html2canvas = html2canvas;
-        let rowspans = document.querySelectorAll('td[rowspan]')
-        let tbody_childrens = Array.from(document.querySelector('tbody').children)
-        let table_width = document.querySelector('table').getBoundingClientRect().width
-        for (td of rowspans){
-            n_rows = td.getAttribute('rowspan')
-            tr = td.parentElement
-            if (n_rows == 1)
-                tr.style.border = 'solid'
-            else {
-                tbody_childrens.every((value, index) => {
-                    ind = null;
-                    if (value == tr) {
-                        tr.style['border-top'] = 'solid'
-                        ind = index + n_rows
-                    }
-                    if (ind != null && ind == index) {
-                        tr.style['border-bottom'] = 'solid'
-                        return
-                    }
-                })
-            }
-        }
-        const {jsPDF} = window.jspdf
-        var doc = new jsPDF();
-        {% comment %} callback: (pdf) => {
-            pdf.save('test.pdf');
-        }, {% endcomment %}
-        doc.html(document.querySelector('html'), {
-            width: 500,
-            x: 30,
-            y: 30
-        });
-        doc.output('datauri'); 
-        {% comment %} doc.save('sample-file.pdf'); {% endcomment %}
-    </script>
     
     </body>
 
