@@ -50,10 +50,11 @@ class QuoteView(View):
         if type == 'get_matches':
             Competition = request.user.get_dealer().get_sub_model(Dealer.SUB_MODEL.COMPETITION)
             matches = []
-            for c in Competition.objects.filter(id__in=request.POST.get('competition_ids[]')):
+            for c in Competition.objects.filter(id__in=request.POST.getlist('competition_ids[]')):
                 matches.append([{
                     'id': e.id,
-                    'name': e.name
+                    'name': e.name,
+                    'competition': e.competition.name
                 } for e in c.matches])
             return JsonResponse(matches, safe=False)
             
@@ -80,7 +81,6 @@ class QuoteToPDFView(View):
         dataframe_data = {e.competition.name: [] for e in events}
 
         for e in events:
-            #print(type(getattr(e, EventQuote.__name__.lower() + '_set').get().quote.encode()))
             quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower(
             ) + '_set').get().quote)[qt.id] for qt in quote_types)
             dataframe_data[e.competition.name].append(
