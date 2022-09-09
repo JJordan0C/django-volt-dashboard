@@ -1,4 +1,5 @@
 $(function() {
+    var selectedChamps = [];
     var selectedMatches = [];
     var matches = undefined;
     var flag_match = false;
@@ -7,12 +8,12 @@ $(function() {
         // You can use stepDirection to get ajax content on the forward movement and stepPosition to identify the step position
         if (stepDirection == 'forward' && idx == 1) {
           // Ajax call to fetch your content
-          $.ajax({
+            $.ajax({
             method  : "POST",
             url     : "",
             data: {
                 type: "get_matches",
-                competition_ids: selectedMatches
+                competition_ids: selectedChamps
             },
             headers: {
                 'X-CSRFToken': CSRF_TOKEN
@@ -33,15 +34,16 @@ $(function() {
                     matches = $('#matches').DataTable( {
                         pageLength : 15,
                         dom: 'frtip',
-                    //     buttons: [
-                    //         'selectAll',
-                    //         'selectNone'
-                    //    ],
                         responsive: true,
                         autoWidth: false,
                         data: res,
                         columns: [
-                            { data: 'id' },
+                            {
+                                data: 'id',
+                                render: function ( data, type, row, meta ) {
+                                    return `<input type="hidden" name="match_id" value="${data}">`
+                                }
+                            },
                             { data: 'name' },
                             { data: 'competition'}
                         ],
@@ -55,10 +57,6 @@ $(function() {
                             selector: 'td:first-child'
                         },
                         language: {
-                            // "buttons": {
-                            //     "selectAll": "Select all items",
-                            //     "selectNone": "Select none"
-                            // },
                             "infoFiltered": "(filtrati da _MAX_ elementi totali)",
                             "infoThousands": ".",
                             "loadingRecords": "Caricamento...",
@@ -304,24 +302,7 @@ $(function() {
                         },
                         order: [[ 1, 'asc' ]]
                     } );
-                    matches.on("click", "th.select-checkbox", function() {
-                        if ($("th.select-checkbox").hasClass("selected")){
-                            matches.rows().deselect();
-                            $("th.select-checkbox").removeClass("selected");
-                        }else{
-                            matches.rows().select();
-                            $("th.select-checkbox").addClass("selected");
-                        }
-                    }).on("select deselect", function(){
-                        ("Selezione o Deselezione in corso..")
-                        if(matches.rows({
-                            selected: true
-                        }).count()!== matches.rows().count()){
-                            $("th.select-checkbox").removeClass("selected");
-                        }else{
-                            $("th.select-checkbox").addClass("selected");  
-                        }
-                    });
+
                     flag_match = true;
                 }else{
                     matches.clear();
@@ -329,6 +310,35 @@ $(function() {
                     matches.draw();
                 }
 
+                if(matches != undefined){
+                    matches.on("click", "th#match", function() {
+                        if ($("th#match").hasClass("selected")){
+                            $("th#match > input").prop('checked', false);
+                            matches.rows().deselect();
+                            $("th#match").removeClass("selected");
+                        }else{
+                            $("th#match > input").prop('checked', true);
+                            matches.rows().select();
+                            $("th#match").addClass("selected");
+                        }
+                    }).on("select deselect", function(){
+                        if(matches.rows({
+                            selected: true
+                        }).count() !== matches.rows().count()){
+                            $("th#match").removeClass("selected");
+                        }else{
+                            $("th#match").addClass("selected");  
+                        }
+                        selectedMatches = []
+                        var selectedRows = matches.rows( { selected: true } ).data().toArray();
+                        for ( row of selectedRows ){
+                            selectedMatches.push(row.id);
+                        }
+                    });
+                }
+                if (stepDirection == 'forward' && selectedChamps == []) {
+
+                }
                 // Hide the loader
                 $('#smartwizard').smartWizard("loader", "hide");
                 callback('')
@@ -353,25 +363,20 @@ $(function() {
     var champ = $('#championship').DataTable( {
         pageLength : 15,
         dom: 'Bfrtip',
-    //     buttons: [
-    //         'selectAll',
-    //         'selectNone'
-    //    ],
         responsive: true,
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
-            targets:   0
+            targets:   0,
+            checkboxes: {
+                selectRow: true
+            }
         } ],
         select: {
             style:    'multi',
             selector: 'td:first-child'
         },
         language: {
-            // "buttons": {
-            //     "selectAll": "Select all items",
-            //     "selectNone": "Select none"
-            // },
             "infoFiltered": "(filtrati da _MAX_ elementi totali)",
             "infoThousands": ".",
             "loadingRecords": "Caricamento...",
@@ -617,37 +622,30 @@ $(function() {
         },
         order: [[ 1, 'asc' ]]
     } );
-    champ.on("click", "th.select-checkbox", function() {
-        if ($("th.select-checkbox").hasClass("selected")){
+    champ.on("click", "th#champ", function() {
+        if ($("th#champ").hasClass("selected")){
+            $("th#champ > input").prop('checked', false);
             champ.rows().deselect();
-            $("th.select-checkbox").removeClass("selected");
+            $("th#champ").removeClass("selected");
         }else{
+            $("th#champ > input").prop('checked', true);
             champ.rows().select();
-            $("th.select-checkbox").addClass("selected");
+            $("th#champ").addClass("selected");
         }
     }).on("select deselect", function(){
-        ("Selezione o Deselezione in corso..")
         if(champ.rows({
             selected: true
-        }).count()!== champ.rows().count()){
-            $("th.select-checkbox").removeClass("selected");
+        }).count() !== champ.rows().count()){
+            $("th#champ").removeClass("selected");
         }else{
-            $("th.select-checkbox").addClass("selected");  
+            $("th#champ").addClass("selected");  
+        }
+        selectedChamps = []
+        var selectedRows = champ.rows( { selected: true } ).data().pluck(0).toArray();
+        for ( row of selectedRows ){
+            selectedChamps.push($(row).val());
         }
     });
-
-    champ.on( 'select', function ( e, dt, type, indexes ) {
-        var rowData = champ.rows( indexes ).data().toArray();
-        selectedMatches.push($(rowData[0][0]).val());
-    } )
-    .on( 'deselect', function ( e, dt, type, indexes ) {
-        var rowData = champ.rows( indexes ).data().toArray();
-        
-        const index = selectedMatches.indexOf($(rowData[0][0]).val());
-        if (index > -1) { // only splice array when item is found
-            selectedMatches.splice(index, 1); // 2nd parameter means remove one item only
-        }
-    } );
 
     /**
      * Table
@@ -1177,9 +1175,11 @@ $(function() {
                 next: 'Avanti',
                 previous: 'Indietro'
             },
+            toolbar: {
+                position: 'both',
+              },
             getContent: provideContent,
             enableUrlHash: false
         }
     );
 });
-

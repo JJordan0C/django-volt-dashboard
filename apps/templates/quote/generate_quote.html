@@ -48,8 +48,8 @@
           <table id="championship" class="display" style="width:100%">
             <thead>
               <tr>
-                <th width="15%" class="text-center">
-                  <input type="checkbox" class="select-checkbox">
+                <th width="10%" class="text-center" id="champ">
+                  <input type="checkbox">
                 </th>
                 <th>Campionato</th>
               </tr>
@@ -57,7 +57,7 @@
             <tbody>
               {% for competition in competitions %}
               <tr>
-                <td width="15%">
+                <td width="10%">
                   <input type="hidden" name="champ_id" value="{{ competition.id }}">
                 </td>
                 <td>{{competition.name}}</td>
@@ -76,8 +76,8 @@
           <table id="matches" class="display" style="width:100%">
             <thead>
               <tr>
-                <th width="15%" class="text-center">
-                  <input type="checkbox" class="select-checkbox">
+                <th width="10%" class="text-center" id="match">
+                  <input type="checkbox">
                 </th>
                 <th width="40%">Match</th>
                 <th>Campionato</th>
