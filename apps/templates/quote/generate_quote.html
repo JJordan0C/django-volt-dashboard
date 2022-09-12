@@ -5,7 +5,17 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <link type='text/css' href="{{ ASSETS_ROOT }}/vendor/smartwizard/css/smart_wizard_all.min.css" rel="stylesheet">
-<link type="text/css" href="{{ ASSETS_ROOT }}/css/generate_quote.css" rel="stylesheet">
+{% if dealer.id == 9 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_goldbet.css" rel="stylesheet">
+{% elif dealer.id == 11 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_snai.css" rel="stylesheet">
+{% elif dealer.id == 13 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_eurobet.css" rel="stylesheet">
+{% elif dealer.id == 14 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_planetwin.css" rel="stylesheet">
+{% elif dealer.id == 15 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_stanleybet.css" rel="stylesheet">
+{% endif %}
 <link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
 
@@ -35,13 +45,7 @@
             Selezione Giocata
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link " href="#step-4">
-            <span class="num">4</span>
-            Tabella finale
-          </a>
-        </li>
-    </ul>
+     </ul>
  
     <div class="tab-content" id="resize_wrapper">
         <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
@@ -49,7 +53,7 @@
             <thead>
               <tr>
                 <th width="10%" class="text-center" id="champ">
-                  <input type="checkbox">
+                  <input type="checkbox" id="champ">
                 </th>
                 <th>Campionato</th>
               </tr>
@@ -57,8 +61,8 @@
             <tbody>
               {% for competition in competitions %}
               <tr>
-                <td width="10%">
-                  <input type="hidden" name="champ_id" value="{{ competition.id }}">
+                <td width="10%" id="champ">
+                  <input type="hidden" name="champ_id" value="{{ competition.id }}" id="champ">
                 </td>
                 <td>{{competition.name}}</td>
               </tr>
@@ -71,6 +75,7 @@
               </tr>
            </tfoot>
           </table>   
+          <div id="output-box"></div>
         </div>
         <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
           <table id="matches" class="display" style="width:100%">
@@ -114,31 +119,6 @@
               <tr>
                 <th></th>
                 <th>Tipologia giocata</th>
-                <th>Giocata</th>
-              </tr>
-           </tfoot>
-          </table>
-        </div>
-        <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
-          <table id="result" class="display" style="width:100%">
-            <thead>
-              <tr>
-                <th>Campionato</th>
-                <th>Partita</th>
-                <th>Giocata</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>Campionato</th>
-                <th>Partita</th>
                 <th>Giocata</th>
               </tr>
            </tfoot>

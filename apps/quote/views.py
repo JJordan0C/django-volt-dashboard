@@ -40,7 +40,8 @@ class QuoteView(View):
 
         context = {
             'competitions': competitions,
-            'quote_types': quote_types
+            'quote_types': quote_types,
+            'dealer': dealer
         }
 
         return render(request, 'quote/generate_quote.html', context=context)
