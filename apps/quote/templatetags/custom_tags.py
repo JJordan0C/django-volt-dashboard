@@ -1,5 +1,7 @@
+import base64
 from django import template
 from datetime import datetime
+from django.conf import settings
 
 register = template.Library()
 
@@ -18,10 +20,20 @@ def append_lbi(val, n_sub_cols):
         lbi.append(val+n_sub_cols)
     else:
         lbi.append(lbi[-1]+n_sub_cols)
+        
+    return ''
     
 def is_in_lbi(val):
     return val+1 in lbi
 
+def image(url):
+    # from os.path import join
+    # url = join(assets_root, base_path, image) 
+    url = 'apps' + settings.ASSETS_ROOT + url
+    with open(url, 'rb') as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+
 register.filter('is_today', is_today)
 register.simple_tag(append_lbi)
+register.simple_tag(image)
 register.filter(is_in_lbi)

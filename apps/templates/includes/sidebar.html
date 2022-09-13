@@ -1,6 +1,6 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-{% if dealer.id == 9 %}
+{% comment %} {% if dealer.id == 9 %}
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_goldbet.css" rel="stylesheet">
 {% elif dealer.id == 11 %}
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_snai.css" rel="stylesheet">
@@ -10,7 +10,8 @@
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_planetwin.css" rel="stylesheet">
 {% elif dealer.id == 15 %}
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_stanleybet.css" rel="stylesheet">
-{% endif %}
+{% endif %} {% endcomment %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_{{ dealer.name|lower }}.css" rel="stylesheet">
 {% endblock stylesheets %}       
         
         <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">

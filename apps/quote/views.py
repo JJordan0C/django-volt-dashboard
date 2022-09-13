@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404, render
 
-from core.utils import html_to_pdf
+from core.utils import html_to_pdf, generate_pdf
 from .models import *
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -145,4 +145,5 @@ class QuoteToPDFView(View):
             'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0]
         }
 
-        return render(request, 'quote/table_to_pdf.html', context=context)
+        #return render(request, 'quote/table_to_pdf.html', context=context)
+        return generate_pdf('quote/table_to_pdf.html', context)

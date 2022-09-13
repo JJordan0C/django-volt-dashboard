@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'apps.authentication.config.AuthConfig',
     
     'django_apscheduler',
-    'bulk_update_or_create',
+    'bulk_update_or_create'
 ]
 
 MIDDLEWARE = [

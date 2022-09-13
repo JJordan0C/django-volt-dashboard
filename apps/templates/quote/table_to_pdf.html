@@ -9,17 +9,18 @@
     <style>
         body {
             font-family: 'Enriqueta', arial, serif;
+            font-size: x-small;
         }
 
         img {
             width: 200px;
-            top: 0;
-            position: absolute;
+            /*top: 0;
+            position: absolute;*/
         }
 
         table {
             border-collapse: collapse;
-            margin-top: 4.5%;
+            table-layout:fixed;
         }
 
         tbody {
@@ -27,9 +28,14 @@
             border-color: black;
         }
 
-        th:not(:empty) {
+        /*th:not(:empty)*/
+        .th {
             border-style: solid;
             background-color: lightgray ;
+        }
+
+        td:not(:first-child) {
+            white-space: nowrap;
         }
 
         td {
@@ -38,8 +44,13 @@
 
         td:first-child{
             text-align: center;
-            max-width: 100px;
+            max-width: 130px;
             word-wrap:break-word;
+        }
+
+        td[rowspan="1"] {
+            white-space: nowrap;
+            font-stretch: ultra-condensed;
         }
 
         .rowspan-border {
@@ -53,9 +64,9 @@
             border-color: black;
         }
         
-        .quote {
-            width: 39px;
-            max-width: 40px;
+        .th-quote {
+            /*width: 39px;*/
+            max-width: 21px;
             word-wrap:break-word;
         }
 
@@ -63,14 +74,16 @@
     </head>
 
     <body>
-        <img src="{{ASSETS_ROOT}}/img/dealers/{{dealer_image}}"/>
+        {% with '/img/dealers/'|add:dealer_image as img %}
+            <img src="data:;base64,{% image img %}"/>
+        {% endwith %}
         <table class="table table-primary">
             <thead>
                 <tr>
                     {% for col in columns %}
                         {% with col.sub_columns|length as sub_col_len%}
                             {% if sub_col_len > 0 %}
-                                <th scope="col" colspan="{{sub_col_len}}">{{col.name}}</th>
+                                <th scope="col" colspan="{{sub_col_len}}" class="th">{{col.name}}</th>
                             {% else %}
                                 <th></th>
                             {% endif %}
@@ -81,11 +94,11 @@
                     {% for col in columns %}
                         {% with col.sub_columns|length as sub_col_len%}
                             {% if sub_col_len == 0 %}
-                                <th scope="col">{{col.name}}</th>
+                                <th scope="col" class="th">{{col.name}}</th>
                             {% else %}
                                 {% append_lbi forloop.counter sub_col_len %}
                                 {% for c in col.sub_columns%}
-                                    <th scope="col" data-sub-col="true" class="quote">{{c}}</th>
+                                    <th scope="col" data-sub-col="true" class="th-quote th">{{c}}</th>
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
@@ -117,10 +130,10 @@
                 {% endfor %}
             </tbody>
         </table>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
-    
+        {% comment %} <script>
+            b = document.querySelector('body')
+            b.insertAdjacentHTML('afterbegin', 'DIO')
+        </script> {% endcomment %}
     </body>
 
 </html>
