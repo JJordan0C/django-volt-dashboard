@@ -1,3 +1,18 @@
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+{% if dealer.id == 9 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_goldbet.css" rel="stylesheet">
+{% elif dealer.id == 11 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_snai.css" rel="stylesheet">
+{% elif dealer.id == 13 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_eurobet.css" rel="stylesheet">
+{% elif dealer.id == 14 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_planetwin.css" rel="stylesheet">
+{% elif dealer.id == 15 %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_stanleybet.css" rel="stylesheet">
+{% endif %}
+{% endblock stylesheets %}       
+        
         <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
             <a class="navbar-brand me-lg-5" href="/">
                 <img class="navbar-brand-dark" src="{{ ASSETS_ROOT }}/img/brand/light.svg" alt="Volt logo" /> <img class="navbar-brand-light" src="{{ ASSETS_ROOT }}/img/brand/dark.svg" alt="Volt logo" />

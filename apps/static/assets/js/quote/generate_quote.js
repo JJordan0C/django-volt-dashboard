@@ -352,6 +352,11 @@ $(function() {
                 $('#smartwizard').smartWizard("loader", "hide");
             });
         }
+        if(idx == 2) {
+            $('.sw-btn-next').html('Scarica Quote');
+        }else{
+            $('.sw-btn-next').html('Avanti');
+        }
        
         // The callback must called in any case to procced the steps
         // The empty callback will not apply any dynamic contents to the steps
@@ -920,11 +925,6 @@ $(function() {
         },
         order: [[ 1, 'asc' ]]
     } );
-
-    /**
-     * Table
-     * Result
-     */
 
     $('#smartwizard').smartWizard(
         {

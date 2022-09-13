@@ -1,9 +1,9 @@
 :root {
     /* --sw-border-color: #091d81; */
     --sw-toolbar-btn-color: #ffffff;
-    --sw-toolbar-btn-background-color:  #11268c;
+    --sw-toolbar-btn-background-color:  #ffc107;
     --sw-anchor-default-primary-color:  #f8f9fa;
-    --sw-anchor-default-secondary-color:  #b0b0b1;
+    --sw-anchor-default-secondary-color:  #aaaaea;
     --sw-anchor-active-primary-color:  #11268c;
     --sw-anchor-active-secondary-color:  #ffffff;
     --sw-anchor-done-primary-color:  #ffc107;
@@ -19,4 +19,21 @@
     /* --sw-loader-color:  #091d81; */
     --sw-loader-background-color:  #f8f9fa;
     --sw-loader-background-wrapper-color:  rgba(255, 255, 255, 0.7); 
+}
+
+.sidebar .nav-item .nav-link:hover {
+    color: #F2F4F6;
+    background-color: #ffc107;
+}
+
+#sidebarMenu{
+    background-color: #11268c !important;
+}
+
+table.dataTable.stripe>tbody>tr.odd.selected>*, table.dataTable.display>tbody>tr.odd.selected>* {
+    box-shadow: inset 0 0 0 9999px #11268c !important;
+}
+
+table.dataTable.hover>tbody>tr.selected>*, table.dataTable.display>tbody>tr.selected>* {
+    box-shadow: inset 0 0 0 9999px #11268c !important;
 }

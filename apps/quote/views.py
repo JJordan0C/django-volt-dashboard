@@ -19,7 +19,12 @@ class TestView(View):
 
 class DashboardView(View):
     def get(self, request):
-        return render(request, 'home/dashboard.html')
+        dealer = request.user.get_dealer()
+        
+        context = {
+            'dealer': dealer
+        }
+        return render(request, 'home/dashboard.html', context=context)
 
 
 class IndexView(View):
