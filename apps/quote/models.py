@@ -191,16 +191,16 @@ class EurobetEvent(BaseEvent):
 class EurobetEventQuote(BaseEventQuote):
     pass
 
-class PlanetcoinQuoteType(BaseQuoteType):
+class PlanetwinQuoteType(BaseQuoteType):
     pass
 
-class PlanetcoinCompetition(BaseCompetition):
+class PlanetwinCompetition(BaseCompetition):
     pass
 
-class PlanetcoinEvent(BaseEvent):
+class PlanetwinEvent(BaseEvent):
     pass
 
-class PlanetcoinEventQuote(BaseEventQuote):
+class PlanetwinEventQuote(BaseEventQuote):
     pass
 
 class StanleybetQuoteType(BaseQuoteType):

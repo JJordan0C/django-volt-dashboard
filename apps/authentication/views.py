@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 # Create your views here.
+from apps.authentication.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
@@ -54,3 +55,14 @@ def register_user(request):
         form = SignUpForm()
 
     return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
+
+
+def user_list(request):
+    dealer = request.user.get_dealer()
+    users = User.objects.all()
+    
+    context = {
+        'users': users,
+        'dealer': dealer
+        }
+    return render(request, "user/user_list.html", context=context)

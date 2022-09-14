@@ -16,5 +16,6 @@ urlpatterns = [
     # Leave `Home.Urls` as last the last line
     path("", IndexView.as_view(), name='index'),
     path("dashboard", DashboardView.as_view(), name='dashboard'),
-    path("quote/", include("apps.quote.urls")),
+    path("quote/", include('apps.quote.urls')),
+    path('user/', include('apps.authentication.extra_user_urls')),
 ]

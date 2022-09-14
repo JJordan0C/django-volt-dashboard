@@ -196,7 +196,7 @@ DEALERS = {
     9 : 'Goldbet',
     11 : 'Snai',
     13 : 'Eurobet',
-    14 : 'Planetcoin',
+    14 : 'Planetwin',
     15 : 'Stanleybet'
 }
            

@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista Utenti {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_{{ dealer.name|lower }}.css" rel="stylesheet">
+<link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% csrf_token %}
+<h1 class="text-info">LISTA UTENTI</h1>
+<table id="user-list" class="display" style="width:100%">
+  <thead >
+    <tr>
+      <th width="5%" class="text-center" id="user">
+        <input type="checkbox" id="user">
+      </th>
+      <th width="20%">Nome</th>
+      <th width="20%">Cognome</th>
+      <th width="22%">Nome Shop</th>
+      <th width="20%">Telefono Shop</th>
+      <th>Modifica</th>
+      <th>Elimina</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td width="5%"></td>
+      <td width="20%">{{ user.first_name }}</td>
+      <td width="20%">{{ user.last_name }}</td>
+      <td width="22%">nomeshop</td>
+      <td width="20%">numtelshop</td>
+      <td><input type="button" value="Edit"></td>
+      <td><a href="https://www.flaticon.com/free-icons/delete" title="delete icons"></a></td>
+    </tr> 
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th width="5%" class="text-center" id="user">
+        <input type="checkbox" id="user">
+      </th>
+      <th width="20%">Nome</th>
+      <th width="20%">Cognome</th>
+      <th width="22%">Nome Shop</th>
+      <th width="20%">Telefono Shop</th>
+      <th>Modifica</th>
+      <th>Elimina</th>
+    </tr>
+ </tfoot>
+</table>   
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+{% endblock javascripts %}
