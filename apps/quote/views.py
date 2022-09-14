@@ -1,13 +1,15 @@
 import json
 from django.shortcuts import get_object_or_404, render
 
-from core.utils import html_to_pdf, generate_pdf
+from core.utils import  generate_pdf
 from .models import *
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import pandas as pd
 from django.core import serializers
 from locale import setlocale, LC_ALL
+from threading import Thread
+from datetime import datetime
 # Create your views here.
 
 
@@ -72,8 +74,9 @@ class QuoteToPDFView(View):
         setlocale(LC_ALL, "it_IT")
         
         data_example = {
-            'quote_type_ids': range(104, 116),
-            'match_ids': range(504, 604)
+            #'quote_type_ids': range(150, 167),
+            'quote_type_ids': range(104, 121),
+            'match_ids': range(504, 704)
         }
         # data = request.POST.get('data')
         dealer = request.user.get_dealer()
@@ -84,39 +87,25 @@ class QuoteToPDFView(View):
         quote_types = QuoteType.objects.filter(
             id__in=data_example['quote_type_ids'])
         events = Event.objects.filter(id__in=data_example['match_ids'])
-        dataframe_data = {e.competition.name: [] for e in events}
-
-        for e in events:
-            quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower(
-            ) + '_set').get().quote)[qt.id] for qt in quote_types)
-            dataframe_data[e.competition.name].append(
-                (
-                    # e.competition.name, # MANIFESTAZIONE
-                    # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
-                    e.data.strftime("%a %d/%m %H:%M"),  # DATA
-                    e.fast_code,  # FASTCODE
-                    e.name,  # AVVENIMENTO
-                ) + quotes
-            )
-
-        # METHOD 1
-        # df = pd.DataFrame(dataframe_data)#.set_index([0,1,2,3])
-        # df.index.names=
-
-        # cols = ['MANIFESTAZIONE', 'DATA', 'FASTCODE', 'AVVENIMENTO']
-        #tuples = [(x, '') for x in cols] + [(qt.get_super_quote, qt.get_sub_quote) for qt in quote_types]
-        # cols = pd.MultiIndex.from_tuples(tuples)
-        # df.columns = cols
-        # writer = pd.ExcelWriter('goldbet.xlsx', engine='xlsxwriter')
-        # df.to_excel(writer, sheet_name='goldbet')
-
-        # # # Auto-adjust columns' width
-        # for column in df:
-        #     column_width = max(df[column].astype(str).map(len).max(), len(column))
-        #     col_idx = df.columns.get_loc(column)
-        #     writer.sheets['goldbet'].set_column(col_idx, col_idx, column_width)
-
-        # writer.save()
+        tables = [events[x:x+70] for x in range(0, len(events),70)] # max 70 rows for each table
+        dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
+        
+        def generate_table(t_events, index):
+            for e in t_events:
+                quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower(
+                ) + '_set').get().quote)[qt.id] for qt in quote_types)
+                dataframe_data[index][e.competition.name].append(
+                    (
+                        # e.competition.name, # MANIFESTAZIONE
+                        # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
+                        e.data.strftime("%a %d/%m %H:%M"),  # DATA
+                        e.fast_code,  # FASTCODE
+                        e.name,  # AVVENIMENTO
+                    ) + quotes
+                )
+                
+        threads = [Thread(target=generate_table, args=[t_events, ind]) for ind, t_events in enumerate(tables)]
+        [t.start() for t in threads]
 
         # METHOD 2
         class Column:
@@ -139,11 +128,12 @@ class QuoteToPDFView(View):
          for qt in quote_types]
         cols += [Column(key, val) for key, val in to_add.items()]
         context = {
-            'data': dataframe_data,
+            'tables_data': dataframe_data,
             'columns': cols,
             'dealer_image': str(get_key_from_value(settings.DEALERS, dealer.name)) + '.jpg',
-            'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0]
+            'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0],
+            'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
         }
-
+        [t.join() for t in threads]
         #return render(request, 'quote/table_to_pdf.html', context=context)
         return generate_pdf('quote/table_to_pdf.html', context)

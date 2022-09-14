@@ -12,10 +12,17 @@
             font-size: x-small;
         }
 
-        img {
+        .dealer {
             width: 200px;
             /*top: 0;
             position: absolute;*/
+        }
+
+        .aams{
+            height: auto;
+            width: auto;
+            /*max-width: 165px;*/
+            max-height: 70px;
         }
 
         table {
@@ -65,75 +72,153 @@
         }
         
         .th-quote {
-            /*width: 39px;*/
-            max-width: 21px;
+            width: 25px;
+            max-width: 25px;
             word-wrap:break-word;
         }
 
+        .table {
+            width: max-content;
+            position: relative;
+            /*width: 25.5cm;
+            height: 29cm;*/
+        }
+
+        .page {
+            width: 25.5cm;
+            height: 36.85cm;
+        }
+
+        .watermark {
+            position: absolute;
+            color: lightgray;
+            opacity: 0.50;
+            font-size: 8em;
+            width: 100%;
+            top: 500px;    
+            text-align: center;
+            z-index: 0;
+            -webkit-transform: rotate(90deg);
+        }
+
+        .user-info {
+            max-width: 150px;
+            word-wrap:break-word;
+        }
+
+        /*.container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }*/
+        /*.container {
+            display: -webkit-box;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            -webkit-box-pack: justify;
+        }*/
+        .container {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: justify;
+        }
+
+        .btm-txt {
+            text-align: center;
+            margin-top: -1%;
+        }
     </style>
     </head>
 
     <body>
-        {% with '/img/dealers/'|add:dealer_image as img %}
-            <img src="data:;base64,{% image img %}"/>
-        {% endwith %}
-        <table class="table table-primary">
-            <thead>
-                <tr>
-                    {% for col in columns %}
-                        {% with col.sub_columns|length as sub_col_len%}
-                            {% if sub_col_len > 0 %}
-                                <th scope="col" colspan="{{sub_col_len}}" class="th">{{col.name}}</th>
-                            {% else %}
-                                <th></th>
-                            {% endif %}
-                        {% endwith %}
-                    {% endfor %}
-                </tr>
-                <tr>
-                    {% for col in columns %}
-                        {% with col.sub_columns|length as sub_col_len%}
-                            {% if sub_col_len == 0 %}
-                                <th scope="col" class="th">{{col.name}}</th>
-                            {% else %}
-                                {% append_lbi forloop.counter sub_col_len %}
-                                {% for c in col.sub_columns%}
-                                    <th scope="col" data-sub-col="true" class="th-quote th">{{c}}</th>
+        {% for data in tables_data%}
+        <div class="page">
+            <div class="table">
+                <div class="container">
+                    {% with '/img/dealers/'|add:dealer_image as img %}
+                        <img class="dealer" src="data:;base64,{% image img %}"/>
+                    {% endwith %}
+                    <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
+                    <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
+                    <h1>Quote CALCIO</h1>
+                </div>
+                <table>
+                    <div class="watermark">watermark</div>
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                                {% with col.sub_columns|length as sub_col_len%}
+                                    {% if sub_col_len > 0 %}
+                                        <th scope="col" colspan="{{sub_col_len}}" class="th">{{col.name}}</th>
+                                    {% else %}
+                                        <th></th>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for col in columns %}
+                                {% with col.sub_columns|length as sub_col_len%}
+                                    {% if sub_col_len == 0 %}
+                                        <th scope="col" class="th">{{col.name}}</th>
+                                    {% else %}
+                                        {% append_lbi forloop.counter sub_col_len %}
+                                        {% for c in col.sub_columns%}
+                                            <th scope="col" data-sub-col="true" class="th-quote th">{{c}}</th>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% comment %} {% for d_tuple in data %}
+                            <tr>
+                                {% for d in d_tuple %}
+                                    <td>{{d}}</td>
                                 {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% comment %} {% for d_tuple in data %}
-                    <tr>
-                        {% for d in d_tuple %}
-                            <td>{{d}}</td>
+                            </tr>
+                        {% endfor %} {% endcomment %}
+                        {% for key, val in data.items %}
+                            {% for d_tuple in val %}
+                            <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
+                                
+                                {% if forloop.counter == 1 %}
+                                    <td rowspan="{{val|length}}" class="rowspan-border" >
+                                        {%if key|length <= 25 or val|length > 1 %}
+                                            {{ key }}
+                                        {% else %}
+                                            {{ key|short }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+    
+                                {% for d in d_tuple%}
+                                    <td class="{% if forloop.counter == 2 and d_tuple|is_today %}today-fastcode{% endif %}"
+                                    style="{% if forloop.counter|is_in_lbi %}border-left:solid;{% endif %} {% if forloop.counter > 3 %}text-align:center;{% endif %}" >
+                                    {%if d == 0 %}
+                                        - - -
+                                    {% else %}
+                                        {{ d }}
+                                    {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
                         {% endfor %}
-                    </tr>
-                {% endfor%} {% endcomment %}
-                {% for key, val in data.items %}
-                    {% for d_tuple in val %}
-                    <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
-                        
-                        {% if forloop.counter == 1 %}
-                            <td rowspan="{{val|length}}" class="rowspan-border" >{{key}}</td>
-                        {% endif %}
-
-                        {% for d in d_tuple%}
-                            <td class="{% if forloop.counter == 2 and d_tuple|is_today %}today-fastcode{% endif %}"
-                            style="{% if forloop.counter|is_in_lbi %}border-left:solid{% endif %}" >{{d}}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-        {% comment %} <script>
-            b = document.querySelector('body')
-            b.insertAdjacentHTML('afterbegin', 'DIO')
-        </script> {% endcomment %}
+                    </tbody>
+                </table>
+                <div class="btm-txt">
+                    <h5>{{date_label}}
+                        <br>
+                        Locandina informativa suscettibile di errori e variazioni. Le date e gli orari degli avvenimenti sono comunicati ufficialmente da AAMS
+                    </h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </body>
 
 </html>

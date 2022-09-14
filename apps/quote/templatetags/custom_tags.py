@@ -2,6 +2,7 @@ import base64
 from django import template
 from datetime import datetime
 from django.conf import settings
+from textwrap import shorten
 
 register = template.Library()
 
@@ -10,8 +11,12 @@ def is_today(event_tuple:tuple):
     today_date = datetime.today().date()
     return event_date == today_date
 
-def define(val=None):
-  return val
+def short(val:str=None):
+    txt = val.split('-')
+    capital_chars = list(filter(lambda x: x.isupper(), txt[0]))
+    prefix = '.'.join(capital_chars) if len(capital_chars) > 1 else txt[0][:3]
+    val = f'{prefix}-{txt[1][1:]}'
+    return shorten(val, width=25, placeholder='...', drop_whitespace=True)
 
 lbi = [] #left border indexes (for columns groups borders)
 def append_lbi(val, n_sub_cols):
@@ -37,3 +42,4 @@ register.filter('is_today', is_today)
 register.simple_tag(append_lbi)
 register.simple_tag(image)
 register.filter(is_in_lbi)
+register.filter(short)

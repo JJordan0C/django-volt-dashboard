@@ -1,5 +1,4 @@
 from .views import QuoteToPDFView, QuoteView, TestView
-from wkhtmltopdf.views import PDFTemplateView
 from django.urls import path, include  # add this
 
 urlpatterns = [

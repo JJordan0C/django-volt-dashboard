@@ -3,7 +3,6 @@ from io import BytesIO, StringIO
 from django.http import HttpResponse
 from django.template.loader import get_template, render_to_string
 from django.core.files import File
-from xhtml2pdf import pisa
 import os
 from django.conf import settings
 import pdfkit
@@ -14,15 +13,6 @@ import pdfkit
 def fetch_resources(uri, rel):
     path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
     return path
-
-def html_to_pdf(template_src, context_dict={}):
-     template = get_template(template_src)
-     html  = template.render(context_dict)
-     result = BytesIO()
-     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result, link_callback=fetch_resources)
-     if not pdf.err:
-         return HttpResponse(result.getvalue(), content_type='application/pdf')
-     return None
  
 def generate_pdf(template_name, context_dict={}, css_name=None):
     html = render_to_string(template_name, context_dict)
@@ -33,7 +23,7 @@ def generate_pdf(template_name, context_dict={}, css_name=None):
     path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     options = {
-        # "enable-local-file-access": None,
+        "enable-local-file-access": None,
         "quiet": "",
         'margin-top': '0.05in',
         'margin-right': '0.05in',
@@ -41,7 +31,8 @@ def generate_pdf(template_name, context_dict={}, css_name=None):
         'margin-left': '0.05in',
         'encoding': "UTF-8",
         'no-outline': None,
-        # 'javascript-delay':'5000'
+        'page-size':'A4'
+        # 'javascript-delay':'2000'
     }
     pdf = pdfkit.from_string(html, configuration=config,  options=options)
     output = BytesIO()
