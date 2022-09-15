@@ -1,10 +1,14 @@
+import pytz
 import requests
 import orjson
 from django.conf import settings
 from threading import Thread
+
+from core.utils import localize_datetime
 from .models import Dealer
-from datetime import datetime
+from datetime import datetime, timezone
 import numpy as np
+import os
 
 def get_data(dealer_id):
     response = requests.get(url=settings.QUOTE_URL.format(dealer_id = dealer_id))
@@ -63,7 +67,7 @@ def parse_quote():
                 'name' : event['eventname'],
                 # 'competition_id' : None, #c.id,
                 'competition_name' : c_kwargs['name'],
-                'data' : datetime.strptime(event['eventopenDate'], '%Y-%m-%dT%H:%M:%S'),
+                'data' : localize_datetime(datetime.strptime(event['eventopenDate'], '%Y-%m-%dT%H:%M:%S')), 
                 'avv' : avv,
             }
             

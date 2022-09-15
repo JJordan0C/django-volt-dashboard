@@ -13,7 +13,8 @@
         }
 
         .dealer {
-            width: 200px;
+            width: 80px;
+            margin-right: 3px;
             /*top: 0;
             position: absolute;*/
         }
@@ -89,6 +90,10 @@
             height: 36.85cm;
         }
 
+        /*.page:not(:first-child) {
+            margin-top: 5%;
+        }*/
+
         .watermark {
             position: absolute;
             color: lightgray;
@@ -106,23 +111,20 @@
             word-wrap:break-word;
         }
 
-        /*.container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-        }*/
-        /*.container {
-            display: -webkit-box;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            -webkit-box-pack: justify;
-        }*/
-        .container {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: flex;
-            -webkit-box-pack: justify;
+        .container > :first-child {
+            float: left;
+            width:33.33333%;
+            text-align:left;
+        }
+        .container > :nth-child(2) {
+            float: left;
+            width:33.33333%;
+            text-align:center;
+        }
+        .container > :nth-child(3) {
+            float: left;
+            width:33.33333%;
+            text-align:right;
         }
 
         .btm-txt {
@@ -137,12 +139,20 @@
         <div class="page">
             <div class="table">
                 <div class="container">
-                    {% with '/img/dealers/'|add:dealer_image as img %}
-                        <img class="dealer" src="data:;base64,{% image img %}"/>
-                    {% endwith %}
-                    <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
-                    <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
-                    <h1>Quote CALCIO</h1>
+                    <div class="container" style="margin-top: 2.5%">
+                        {% for dealer_image in dealer_images %}
+                            {% with '/img/dealers/'|add:dealer_image as img %}
+                                <div><img class="dealer" src="data:;base64,{% image img %}"/></div>
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
+                        <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
+                    </div>
+                    <div>
+                        <h1>Quote CALCIO</h1>
+                    </div>
                 </div>
                 <table>
                     <div class="watermark">watermark</div>

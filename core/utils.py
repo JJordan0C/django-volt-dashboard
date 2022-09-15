@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from io import BytesIO, StringIO
 from django.http import HttpResponse
@@ -6,6 +7,7 @@ from django.core.files import File
 import os
 from django.conf import settings
 import pdfkit
+import pytz
 # from rlextra.rml2pdf import rml2pdf
 # import cStringIO
 # from reportlab.pdfgen import canvas
@@ -45,10 +47,7 @@ def get_key_from_value(dict:dict, value):
         return next(x for x,y in dict.items() if y == value)
     except:
         return None
-
-# def generate_pdf(template_src, context={}):
-#     template = get_template(template_src)
-#     html  = template.render(context)
-#     buf = cStringIO.StringIO()
-#     rml2pdf.go(html, outputFileName=buf)
-#     pdfData = buf.read()
+    
+def localize_datetime(dt:datetime):
+    tz = pytz.timezone('Europe/Rome')
+    return tz.localize(dt)

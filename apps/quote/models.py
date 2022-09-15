@@ -3,8 +3,6 @@ from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 import re
 from django.conf import settings
 from core.utils import get_key_from_value
-from json import JSONDecoder, JSONEncoder
-import orjson
 
 def simple_plural(word):
     if word[-1] == "y":

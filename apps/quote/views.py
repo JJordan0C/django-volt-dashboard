@@ -1,7 +1,7 @@
-import json
+import orjson
 from django.shortcuts import get_object_or_404, render
 
-from core.utils import  generate_pdf
+from core.utils import  generate_pdf, localize_datetime
 from .models import *
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -9,7 +9,7 @@ import pandas as pd
 from django.core import serializers
 from locale import setlocale, LC_ALL
 from threading import Thread
-from datetime import datetime
+from datetime import datetime, timedelta
 # Create your views here.
 
 
@@ -76,7 +76,10 @@ class QuoteToPDFView(View):
         data_example = {
             #'quote_type_ids': range(150, 167),
             'quote_type_ids': range(104, 121),
-            'match_ids': range(504, 704)
+            'match_ids': '*', #range(702, 802),
+            'order_by': 'date', # date, top, country(A-Z)
+            'date_range_from': localize_datetime(datetime.today().replace(hour=0, minute=1)),
+            'date_range_to': localize_datetime(datetime.today().replace(hour=0, minute=1) + timedelta(days=5)),
         }
         # data = request.POST.get('data')
         dealer = request.user.get_dealer()
@@ -86,20 +89,36 @@ class QuoteToPDFView(View):
 
         quote_types = QuoteType.objects.filter(
             id__in=data_example['quote_type_ids'])
-        events = Event.objects.filter(id__in=data_example['match_ids'])
-        tables = [events[x:x+70] for x in range(0, len(events),70)] # max 70 rows for each table
+        events = Event.objects.filter(data__range=[data_example['date_range_from'], data_example['date_range_to']])
+        
+        if data_example['match_ids'] != '*':
+            events = events.filter(id__in=data_example['match_ids'])
+        
+        if data_example['order_by'] == 'date':
+            events = events.order_by('data')
+            
+        if data_example['order_by'] == 'country':
+            events = events.order_by('competition__name')
+        
+        tables = [events[x:x+68] for x in range(0, len(events),68)] # max 70 rows for each table
         dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
         
         def generate_table(t_events, index):
             for e in t_events:
-                quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower(
-                ) + '_set').get().quote)[qt.id] for qt in quote_types)
+                quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower()
+                + '_set').get().quote)[qt.id] for qt in quote_types)
+                
+                today = datetime.today()
+                start = localize_datetime(today.replace(hour=0, minute=1))
+                end = localize_datetime(today.replace(hour=9, minute=0) + timedelta(days=1))
+                fast_code = str(e.fast_code)[::-1] if start <= e.data <= end else e.fast_code
+                
                 dataframe_data[index][e.competition.name].append(
                     (
                         # e.competition.name, # MANIFESTAZIONE
                         # e.data.strftime("%d/%m/%Y %H:%M"), # DATA
                         e.data.strftime("%a %d/%m %H:%M"),  # DATA
-                        e.fast_code,  # FASTCODE
+                        fast_code,  # FASTCODE
                         e.name,  # AVVENIMENTO
                     ) + quotes
                 )
@@ -127,13 +146,13 @@ class QuoteToPDFView(View):
         [to_add[qt.get_super_quote.upper()].append(qt.get_sub_quote.upper())
          for qt in quote_types]
         cols += [Column(key, val) for key, val in to_add.items()]
+        [t.join() for t in threads]
         context = {
             'tables_data': dataframe_data,
             'columns': cols,
-            'dealer_image': str(get_key_from_value(settings.DEALERS, dealer.name)) + '.jpg',
+            'dealer_images':['{}_{}.jpg'.format(dealer.id, i) for i in range(1,3)] if dealer.name == "Goldbet" else [str(dealer.id) + '.jpg'],
             'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0],
             'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
         }
-        [t.join() for t in threads]
         #return render(request, 'quote/table_to_pdf.html', context=context)
         return generate_pdf('quote/table_to_pdf.html', context)
