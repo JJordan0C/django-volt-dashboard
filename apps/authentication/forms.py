@@ -50,7 +50,40 @@ class SignUpForm(UserCreationForm):
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Password check",
+                "placeholder": "Conferma Password",
+                "class": "form-control"
+            }
+        ))
+    
+    DEALER_CHOICES =(
+    (0, "Goldbet"),
+    (1, "Snai"),
+    (2, "Eurobet"),
+    (3, "Planetwin"),
+    (4, "Stanleybet"),
+    )
+    
+    dealer = forms.ChoiceField(
+        choices = DEALER_CHOICES,
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+    
+    shop_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Nome Negozio",
+                "class": "form-control"
+            }
+        ))
+    
+    shop_number = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "placeholder": "Telefono Negozio",
                 "class": "form-control"
             }
         ))

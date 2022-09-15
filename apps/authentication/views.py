@@ -33,8 +33,11 @@ def login_view(request):
 
 
 def register_user(request):
+    dealer = request.user.get_dealer()
     msg = None
     success = False
+    
+    
 
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -42,19 +45,30 @@ def register_user(request):
             form.save()
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
+            dealer = form.cleaned_data.get("dealer")
+            shop_name = form.cleaned_data.get("shop_name")
+            shop_number = form.cleaned_data.get("shop_number")
+            user = authenticate(username=username, password=raw_password, dealer=dealer, shop_name=shop_name, shop_number=shop_number)
 
-            msg = 'User created - please <a href="/login">login</a>.'
+            msg = 'User created'
             success = True
 
             # return redirect("/login/")
-
+            
+    
         else:
             msg = 'Form is not valid'
     else:
         form = SignUpForm()
+        
+    context = {
+        'form': form,
+        'msg': msg,
+        'success': success,
+        'dealer':dealer
+        }
 
-    return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
+    return render(request, "user/create_user.html", context=context)
 
 
 def user_list(request):

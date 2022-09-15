@@ -7,6 +7,7 @@
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_{{ dealer.name|lower }}.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -16,12 +17,9 @@
 <table id="user-list" class="display" style="width:100%">
   <thead >
     <tr>
-      <th width="5%" class="text-center" id="user">
-        <input type="checkbox" id="user">
-      </th>
       <th width="20%">Nome</th>
       <th width="20%">Cognome</th>
-      <th width="22%">Nome Shop</th>
+      <th width="25%">Nome Shop</th>
       <th width="20%">Telefono Shop</th>
       <th>Modifica</th>
       <th>Elimina</th>
@@ -30,24 +28,20 @@
   <tbody>
     {% for user in users %}
     <tr>
-      <td width="5%"></td>
       <td width="20%">{{ user.first_name }}</td>
       <td width="20%">{{ user.last_name }}</td>
-      <td width="22%">nomeshop</td>
+      <td width="25%">nomeshop</td>
       <td width="20%">numtelshop</td>
-      <td><input type="button" value="Edit"></td>
-      <td><a href="https://www.flaticon.com/free-icons/delete" title="delete icons"></a></td>
-    </tr> 
+      <td><button class="btn"><i class="fa fa-edit" style="font-size:24px"></i></button></td>
+      <td><button class="btn"><i class="fa fa-remove" style="font-size:20px;color:red"></i></button></td>
+    </tr>
     {% endfor %}
   </tbody>
   <tfoot>
     <tr>
-      <th width="5%" class="text-center" id="user">
-        <input type="checkbox" id="user">
-      </th>
       <th width="20%">Nome</th>
       <th width="20%">Cognome</th>
-      <th width="22%">Nome Shop</th>
+      <th width="25%">Nome Shop</th>
       <th width="20%">Telefono Shop</th>
       <th>Modifica</th>
       <th>Elimina</th>
@@ -59,6 +53,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script src="{{ ASSETS_ROOT }}/js/user/user_list.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
 {% endblock javascripts %}
