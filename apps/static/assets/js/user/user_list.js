@@ -1,8 +1,9 @@
 $(function() {
-    var selectedUsers = [];
+    // var selectedUsers = [];
     var user = $('#user-list').DataTable( {
         pageLength : 15,
-        dom: 'frtip',
+        dom: 'Brftip',
+        bInfo : false,
         responsive: true,
         autoWidth: false,
         select: {

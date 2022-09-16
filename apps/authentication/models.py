@@ -11,8 +11,16 @@ from core.task import scheduler
 from apps.quote.models import Dealer
 
 # Create your models here.
+class Shop(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.TextField(max_length=320)
+    address = models.TextField(max_length=320)
+    tel = models.IntegerField()
+    
+    
 class User(AbstractUser):
    dealer_id = models.IntegerField(null=True)
+   shop = models.ForeignKey(to=Shop, null=True, on_delete=models.CASCADE)
    
    def get_dealer(self):
        if self.dealer_id and not self.is_superuser:

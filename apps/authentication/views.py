@@ -37,8 +37,6 @@ def register_user(request):
     msg = None
     success = False
     
-    
-
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -52,10 +50,8 @@ def register_user(request):
 
             msg = 'User created'
             success = True
-
             # return redirect("/login/")
             
-    
         else:
             msg = 'Form is not valid'
     else:

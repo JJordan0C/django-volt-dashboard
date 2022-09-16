@@ -926,6 +926,8 @@ $(function() {
         order: [[ 1, 'asc' ]]
     } );
 
+    $('.select-item:not(:first-child)').hide()
+
     $('#smartwizard').smartWizard(
         {
             lang: {

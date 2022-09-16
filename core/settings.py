@@ -204,3 +204,5 @@ QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquotea
 
 #DJANGO APSCHEDULER
 APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

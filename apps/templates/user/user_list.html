@@ -30,8 +30,8 @@
     <tr>
       <td width="20%">{{ user.first_name }}</td>
       <td width="20%">{{ user.last_name }}</td>
-      <td width="25%">nomeshop</td>
-      <td width="20%">numtelshop</td>
+      <td width="25%">{{user.shop.name}}</td>
+      <td width="20%">{{user.shop.tel}}</td>
       <td><button class="btn"><i class="fa fa-edit" style="font-size:24px"></i></button></td>
       <td><button class="btn"><i class="fa fa-remove" style="font-size:20px;color:red"></i></button></td>
     </tr>
