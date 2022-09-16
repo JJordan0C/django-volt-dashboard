@@ -357,7 +357,6 @@ $(function() {
         }else{
             $('.sw-btn-next').html('Avanti');
         }
-       
         // The callback must called in any case to procced the steps
         // The empty callback will not apply any dynamic contents to the steps
         callback();
@@ -665,7 +664,6 @@ $(function() {
      * Table
      * Quote
      */
-
     $('#smartwizard').smartWizard(
         {
             lang: {
@@ -676,7 +674,7 @@ $(function() {
                 position: 'both',
               },
             getContent: provideContent,
-            enableUrlHash: false
+            enableUrlHash: false,
         }
     );
     $('.sw-btn-next').prop('disabled', true)
@@ -703,4 +701,33 @@ $(function() {
           },
         });
       });
+
+    let finish_bnt = $('.sw-btn-next')
+    $('#dtt, #dtf').on('change', () => {
+        if ($('#dtt').val() != '' && $('#dtf').val() != '') {
+            
+            finish_bnt.prop('disabled', false)
+            finish_bnt.removeClass('disabled')
+            finish_bnt.on('click', () => {
+                var form = document.createElement("form");
+                var element1 = document.createElement("input"); 
+                var element2 = document.createElement("input");  
+            
+                form.method = "POST";
+                form.action = "login.php";   
+            
+                element1.value=un;
+                element1.name="un";
+                form.appendChild(element1);  
+            
+                element2.value=pw;
+                element2.name="pw";
+                form.appendChild(element2);
+            
+                document.body.appendChild(form);
+            
+                form.submit();
+            })
+        }
+    })
 });

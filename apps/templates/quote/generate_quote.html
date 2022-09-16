@@ -111,6 +111,7 @@
                     type="text"
                     class="form-control"
                     data-td-target="#dt_from"
+                    name="dt_from"
                     />
                     <span
                       class="input-group-text"
@@ -133,6 +134,7 @@
                     type="text"
                     class="form-control"
                     data-td-target="#dt_to"
+                    name="dt_to"
                     />
                     <span
                       class="input-group-text"
@@ -149,7 +151,27 @@
               <div class="row text-center">
                 <h1>Ordina per</h1>
 
-                
+                <fieldset>
+                  <legend class="h6"></legend>
+                  <div class="form-check">
+                      <input class="form-check-input float-none" type="radio" name="order_by" id="d_radio" value="date" checked="">
+                      <label class="form-check-label" for="d_radio">
+                        Data e Ora
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input float-none" type="radio" name="order_by" id="t_radio" value="top">
+                      <label class="form-check-label" for="t_radio">
+                        Leghe Top
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input float-none" type="radio" name="order_by" id="o_radio" value="country">
+                      <label class="form-check-label" for="o_radio">
+                        Paese A-Z
+                      </label>
+                    </div>
+                </fieldset>
               </div>
             </div>
           </div>
