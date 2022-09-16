@@ -6,10 +6,6 @@ $(function() {
         bInfo : false,
         responsive: true,
         autoWidth: false,
-        select: {
-            style:    'multi',
-            selector: 'td:first-child'
-        },
         language: {
             "infoFiltered": "(filtrati da _MAX_ elementi totali)",
             "infoThousands": ".",

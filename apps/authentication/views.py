@@ -23,7 +23,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect("/dashboard")
+                return redirect("/dashboard") if user.is_superuser else redirect("/quote/prospetto-quote")
             else:
                 msg = 'Invalid credentials'
         else:

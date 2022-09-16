@@ -5,9 +5,15 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <link type='text/css' href="{{ ASSETS_ROOT }}/vendor/smartwizard/css/smart_wizard_all.min.css" rel="stylesheet">
-<link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_{{ dealer.name|lower }}.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 <link type='text/css' href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/css/tempus-dominus.css"
+  rel="stylesheet" crossorigin="anonymous">
+<style>
+  .select-item:not(:first-child) {
+    display: none!important;
+  }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -31,7 +37,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#step-3">
             <span class="num">3</span>
-            Selezione Giocata
+            Selezione Filtri
           </a>
         </li>
      </ul>
@@ -87,31 +93,66 @@
           </table>         
         </div>
         <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-          <table id="quote" class="display" style="width:100%">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Tipologia giocata</th>
-                <th>Giocata</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for qt in quote_types %}
-              <tr>
-                <td></td>
-                <td>{{qt.get_super_quote}}</td>
-                <td>{{qt.get_sub_quote}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th>Tipologia giocata</th>
-                <th>Giocata</th>
-              </tr>
-           </tfoot>
-          </table>
+          <div class="row row-cols-1 row-cols-md-2">
+            <div class="col">
+              <div class="row text-center">
+                <h1>Seleziona Date</h1>
+              </div>
+              <div class="row row-cols-2">
+                <div class="col">
+                  <label for="dtf" class="form-label">Da</label>
+                  <div id="dt_from" 
+                    data-td-target-input="nearest"
+                    data-td-target-toggle="nearest"
+                    class="input-group log-event">
+
+                    <input
+                    id="dtf"
+                    type="text"
+                    class="form-control"
+                    data-td-target="#dt_from"
+                    />
+                    <span
+                      class="input-group-text"
+                      data-td-target="#dt_from"
+                      data-td-toggle="datetimepicker"
+                    >
+                    <i class="fas fa-calendar"></i>
+                  </div>
+
+                </div>
+                <div class="col">
+                  <label for="dtt" class="form-label">A</label>
+                  <div id="dt_to" 
+                    data-td-target-input="nearest"
+                    data-td-target-toggle="nearest"
+                    class="input-group log-event">
+
+                    <input
+                    id="dtt"
+                    type="text"
+                    class="form-control"
+                    data-td-target="#dt_to"
+                    />
+                    <span
+                      class="input-group-text"
+                      data-td-target="#dt_to"
+                      data-td-toggle="datetimepicker"
+                    >
+                    <i class="fas fa-calendar"></i>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col col mt-4 mt-md-0">
+              <div class="row text-center">
+                <h1>Ordina per</h1>
+
+                
+              </div>
+            </div>
+          </div>
         </div>
     </div>
  
@@ -126,7 +167,13 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script src="{{ ASSETS_ROOT }}/vendor/smartwizard/js/jquery.smartWizard.min.js"></script>
-<script src="{{ ASSETS_ROOT }}/js/quote/generate_quote.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+<!-- Popperjs -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+crossorigin="anonymous"></script>
+<!-- Tempus Dominus JavaScript -->
+<script src="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/js/tempus-dominus.js"
+crossorigin="anonymous"></script>
+<script src="{{ ASSETS_ROOT }}/js/quote/generate_quote.js"></script>
 {% endblock javascripts %}

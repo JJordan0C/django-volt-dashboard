@@ -150,9 +150,10 @@ class QuoteToPDFView(View):
         context = {
             'tables_data': dataframe_data,
             'columns': cols,
-            'dealer_images':['{}_{}.jpg'.format(dealer.id, i) for i in range(1,3)] if dealer.name == "Goldbet" else [str(dealer.id) + '.jpg'],
+            'dealer_images':['{}_{}.png'.format(dealer.id, i) for i in range(1,4)] if dealer.name == "Goldbet" else [str(dealer.id) + '.png'],
             'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0],
             'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
         }
         #return render(request, 'quote/table_to_pdf.html', context=context)
         return generate_pdf('quote/table_to_pdf.html', context)
+
