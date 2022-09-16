@@ -76,7 +76,7 @@ class QuoteToPDFView(View):
         data_example = {
             #'quote_type_ids': range(150, 167),
             'quote_type_ids': range(104, 121),
-            'match_ids': '*', #range(702, 802),
+            'match_ids': range(602, 802),
             'order_by': 'date', # date, top, country(A-Z)
             'date_range_from': localize_datetime(datetime.today().replace(hour=0, minute=1)),
             'date_range_to': localize_datetime(datetime.today().replace(hour=0, minute=1) + timedelta(days=5)),
