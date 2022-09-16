@@ -26,6 +26,20 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
+    firts_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Nome",
+                "class": "form-control"
+            }
+        ))
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Cognome",
+                "class": "form-control"
+            }
+        ))
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -40,30 +54,24 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(
+    password = forms.CharField(
+        disabled=True,
+        widget=forms.TextInput(
             attrs={
                 "placeholder": "Password",
                 "class": "form-control"
             }
         ))
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                "placeholder": "Conferma Password",
-                "class": "form-control"
-            }
-        ))
     
     DEALER_CHOICES =(
-    (0, "Goldbet"),
-    (1, "Snai"),
-    (2, "Eurobet"),
-    (3, "Planetwin"),
-    (4, "Stanleybet"),
+    (9, "Goldbet"),
+    (11, "Snai"),
+    (13, "Eurobet"),
+    (14, "Planetwin"),
+    (15, "Stanleybet"),
     )
     
-    dealer = forms.ChoiceField(
+    dealer_id = forms.ChoiceField(
         choices = DEALER_CHOICES,
         widget=forms.Select(
             attrs={
@@ -90,4 +98,4 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'dealer', 'shop_name', 'shop_number')
+        fields = ('firts_name', 'last_name','username', 'email', 'password', 'dealer_id', 'shop_name', 'shop_number')
