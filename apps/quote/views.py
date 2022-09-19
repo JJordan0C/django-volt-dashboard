@@ -69,48 +69,59 @@ class QuoteView(View):
             
 class QuoteToPDFView(View):
 
-    def get(self, request):
+    def post(self, request):
         
         setlocale(LC_ALL, "it_IT")
         
-        data_example = {
-            #'quote_type_ids': range(150, 167),
-            'quote_type_ids': range(104, 121),
-            'match_ids': range(602, 802),
-            'order_by': 'date', # date, top, country(A-Z)
-            'date_range_from': localize_datetime(datetime.today().replace(hour=0, minute=1)),
-            'date_range_to': localize_datetime(datetime.today().replace(hour=0, minute=1) + timedelta(days=5)),
-        }
+        # data = {
+        #     #'quote_type_ids': range(150, 167),
+        #     'quote_type_ids': range(104, 121),
+        #     'match_ids': '*',
+        #     'order_by': 'date', # date, top, country(A-Z)
+        #     'date_range_from': localize_datetime(datetime.today().replace(hour=0, minute=1)),
+        #     'date_range_to': localize_datetime(datetime.today().replace(hour=0, minute=1) + timedelta(days=5)),
+        # }
+        
         # data = request.POST.get('data')
         dealer = request.user.get_dealer()
         QuoteType = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE)
         Event = dealer.get_sub_model(Dealer.SUB_MODEL.EVENT)
         EventQuote = dealer.get_sub_model(Dealer.SUB_MODEL.EVENTQUOTE)
+        
+        data = {
+            #'quote_type_ids': range(150, 167),
+            'quote_type_ids': settings.PDF_QUOTE_TYPES[dealer.id],
+            'match_ids': request.POST.get('match_ids').split(','),
+            'order_by': request.POST.get('order_by'),
+            'date_range_from': localize_datetime(datetime.strptime(request.POST.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
+            'date_range_to': localize_datetime(datetime.strptime(request.POST.get('date_range_to'), '%d/%m/%Y, %H:%M')),
+        }
 
         quote_types = QuoteType.objects.filter(
-            id__in=data_example['quote_type_ids'])
-        events = Event.objects.filter(data__range=[data_example['date_range_from'], data_example['date_range_to']])
+            id__in=data['quote_type_ids'])
+        events = Event.objects.filter(data__range=[data['date_range_from'], data['date_range_to']])
         
-        if data_example['match_ids'] != '*':
-            events = events.filter(id__in=data_example['match_ids'])
+        if data['match_ids'] != '*':
+            events = events.filter(id__in=data['match_ids'])
         
-        if data_example['order_by'] == 'date':
+        if data['order_by'] == 'date':
             events = events.order_by('data')
             
-        if data_example['order_by'] == 'country':
+        if data['order_by'] == 'country':
             events = events.order_by('competition__name')
         
         tables = [events[x:x+68] for x in range(0, len(events),68)] # max 70 rows for each table
         dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
+        
+        today = datetime.today()
+        start = localize_datetime(today.replace(hour=0, minute=1))
+        end = localize_datetime(today.replace(hour=9, minute=0) + timedelta(days=1))
         
         def generate_table(t_events, index):
             for e in t_events:
                 quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower()
                 + '_set').get().quote)[qt.id] for qt in quote_types)
                 
-                today = datetime.today()
-                start = localize_datetime(today.replace(hour=0, minute=1))
-                end = localize_datetime(today.replace(hour=9, minute=0) + timedelta(days=1))
                 fast_code = str(e.fast_code)[::-1] if start <= e.data <= end else e.fast_code
                 
                 dataframe_data[index][e.competition.name].append(
@@ -155,5 +166,8 @@ class QuoteToPDFView(View):
             'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
         }
         #return render(request, 'quote/table_to_pdf.html', context=context)
-        return generate_pdf('quote/table_to_pdf.html', context)
+        filename = 'Quote_{}_{}.pdf'.format(dealer.name, today.strftime('%Y-%m-%d'))
+        res =  generate_pdf('quote/table_to_pdf.html', context)
+        res['Content-Disposition'] = 'filename*="{}"'.format(filename) # NOT WORKING
+        return res
 

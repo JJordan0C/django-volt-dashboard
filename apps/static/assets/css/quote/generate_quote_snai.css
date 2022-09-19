@@ -21,7 +21,7 @@
     --sw-loader-background-wrapper-color:  rgba(255, 255, 255, 0.7); 
 }
 
-.sidebar .nav-item .nav-link:hover {
+.sidebar .nav-item .nav-link:hover, .sidebar .nav-item.active > .nav-link {
     color: #F2F4F6;
     background-color: #f16c13;
 }

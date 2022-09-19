@@ -2,8 +2,8 @@
 {% block stylesheets %}
 <link type="text/css" href="{{ ASSETS_ROOT }}/css/quote/generate_quote_{{ dealer.name|lower }}.css" rel="stylesheet">
 <script src="https://kit.fontawesome.com/9c5b510c4d.js" crossorigin="anonymous"></script>
-{% endblock stylesheets %}       
-        
+{% endblock stylesheets %}    
+{% with request.resolver_match.url_name as segment %}   
         <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
             <a class="navbar-brand me-lg-5" href="/">
                 <img class="navbar-brand-dark" src="{{ ASSETS_ROOT }}/img/brand/soccer_ball.svg" alt="Volt logo" /> <img class="navbar-brand-light" src="{{ ASSETS_ROOT }}/img/brand/soccer_ball.svg"/>
@@ -49,12 +49,12 @@
                 </a>
               </li>
               {% if request.user.is_superuser%}
-              <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
+              <li class="nav-item {% if segment == 'dashboard' %} active {% endif %}">
                 <a href="{% url 'dashboard' %}" class="nav-link"> 
-                  <span class="sidebar-text"><i class="fa-solid fa fa-house"></i> Dashboard</span>
+                  <span class="sidebar-text"><i class="fa-solid fa fa-house"></i> Dashboard </span>
                 </a>
               </li>
-              <li class="nav-item {% if 'tables-bootstrap-' in segment %} active {% endif %}">
+              <li class="nav-item {% if 'user' in segment %} active {% endif %}">
                 <span
                   class="nav-link  collapsed  d-flex justify-content-between align-items-center"
                   data-bs-toggle="collapse" data-bs-target="#submenu-app">
@@ -65,7 +65,8 @@
                     <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                   </span>
                 </span>
-                <div class="multi-level collapse {% if 'user-list' in segment %} show {% endif %}"
+                <div class="multi-level collapse"
+                 {% comment %} {% if segment == 'user-list' %} show {% endif %}" {% endcomment %}
                   role="list" id="submenu-app" aria-expanded="false">
                   <ul class="flex-column nav">
                     <li class="nav-item {% if 'user-list' in segment %} active {% endif %}">
@@ -75,7 +76,7 @@
                     </li>
                   </ul>
                 </div>
-                <div class="multi-level collapse {% if 'create-user' in segment %} show {% endif %}"
+                <div class="multi-level collapse"
                   role="list" id="submenu-app" aria-expanded="false">
                   <ul class="flex-column nav">
                     <li class="nav-item {% if 'create-user' in segment %} active {% endif %}">
@@ -87,7 +88,7 @@
                 </div>
               </li>
               {% endif %}
-              <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
+              <li class="nav-item {% if segment == 'generate-quote' %} active {% endif %}">
                 <a href="{% url 'generate-quote' %}" class="nav-link">
                   <span class="sidebar-text"><i class="fa-solid fa-file-lines"></i> Prospetto Quote</span>
                 </a>
@@ -241,3 +242,4 @@
             </ul>
           </div>
         </nav> 
+{% endwith %}

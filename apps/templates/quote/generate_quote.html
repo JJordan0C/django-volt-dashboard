@@ -13,10 +13,17 @@
   .select-item:not(:first-child) {
     display: none!important;
   }
+
+  iframe {
+    background: url({{ ASSETS_ROOT }}/img/loader/1.gif) center center no-repeat
+  }
+
 </style>
 {% endblock stylesheets %}
 
 {% block content %}
+
+<input type="hidden" id="pdf_url" value="{% url 'Quote_PDF' %}"
 
 <!-- SmartWizard html -->
 {% csrf_token %}
@@ -182,6 +189,9 @@
     <div class="progress">
       <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
+</div>
+<div class="container mt-5">
+  <iFrame src="" name="iframe_pdf" width="100%" height="750px"></iFrame>
 </div>
 
 {% endblock content %}

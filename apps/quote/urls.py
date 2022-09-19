@@ -4,5 +4,5 @@ from django.urls import path, include  # add this
 urlpatterns = [
     path("test", TestView.as_view(), name='test'),
     path("prospetto-quote", QuoteView.as_view(), name='generate-quote'),
-    path("generate-quote-pdf", QuoteToPDFView.as_view(), name='generate-quote-pdf'),
+    path("Quote_PDF", QuoteToPDFView.as_view(), name='Quote_PDF'),
 ]

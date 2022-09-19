@@ -199,6 +199,55 @@ DEALERS = {
     14 : 'Planetwin',
     15 : 'Stanleybet'
 }
+
+PDF_QUOTE_TYPES = {
+    9 : [
+        104, 105, 106,  # ESITO FINALE 1 X 2
+        191, 192, 193,  # ESITO FINALE 1° TEMPO 1 X 2
+        801, 802, 803,  # DOPPIA CHANCE 1X 12 X2
+        1612, 1613,     # UNDER/OVER 1,5 U O
+        1622, 1623,     # UNDER/OVER 2,5 U O
+        1624, 1625,     # UNDER/OVER 3,5 U O
+        970, 971,       # GOAL/NOGOAL GG NG
+    ],
+    11 : [
+        160, 161, 162,  # ESITO FINALE 1 X 2
+        301, 302, 303,  # ESITO FINALE 1° TEMPO 1 X 2
+        546, 547, 548,  # DOPPIA CHANCE 1X 12 X2  (DA VEDERE SE GIUSTO PERCHE' DC IN/DC OUT ???)
+        1601, 1602,     # UNDER/OVER 1,5 U O
+        1603, 1604,     # UNDER/OVER 2,5 U O
+        1609, 1610,     # UNDER/OVER 3,5 U O
+        613, 614,       # GOAL/NOGOAL GG NG
+    ],
+    13 : [
+        159, 160, 161,  # ESITO FINALE 1 X 2
+        267, 268, 269,  # ESITO FINALE 1° TEMPO 1 X 2
+        99, 28, 1173,   # DOPPIA CHANCE 1X 12 X2 (NON SI TROVANO O 1X|1X 2X|2X ??)
+        1042, 1043,     # UNDER/OVER 1,5 U O
+        1044, 1045,     # UNDER/OVER 2,5 U O
+        1046, 1047,     # UNDER/OVER 3,5 U O
+        377, 378,       # GOAL/NOGOAL GG NG
+    ],
+    14 : [
+        16, 17, 18,     # ESITO FINALE 1 X 2
+        660, 661, 662,  # ESITO FINALE 1° TEMPO 1 X 2
+        298, 299, 300,  # DOPPIA CHANCE 1X 12 X2
+        554, 553,       # UNDER/OVER 1,5 U O
+        560, 559,       # UNDER/OVER 2,5 U O
+        566, 565,       # UNDER/OVER 3,5 U O
+        365, 366,       # GOAL/NOGOAL GG NG
+    ],
+    15 : [
+        1, 2, 3,        # ESITO FINALE 1 X 2
+        332, 333, 334,  # ESITO FINALE 1° TEMPO 1 X 2
+        104, 105, 106,  # DOPPIA CHANCE 1X 12 X2
+        380, 381,       # UNDER/OVER 1,5 U O
+        386, 387,       # UNDER/OVER 2,5 U O
+        392, 393,       # UNDER/OVER 3,5 U O
+        115, 116,       # GOAL/NOGOAL GG NG
+    ],
+}
+
            
 QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquoteall.aspx?book={dealer_id}&sport=0"
 
@@ -206,3 +255,7 @@ QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquotea
 APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']

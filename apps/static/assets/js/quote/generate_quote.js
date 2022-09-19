@@ -1,4 +1,6 @@
 $(function() {
+    const iframe = document.querySelector("iframe");
+    $(iframe).hide()
     var selectedChamps = [];
     var selectedMatches = [];
     var matches = undefined;
@@ -357,6 +359,7 @@ $(function() {
         }else{
             $('.sw-btn-next').html('Avanti');
         }
+
         // The callback must called in any case to procced the steps
         // The empty callback will not apply any dynamic contents to the steps
         callback();
@@ -709,24 +712,49 @@ $(function() {
             finish_bnt.prop('disabled', false)
             finish_bnt.removeClass('disabled')
             finish_bnt.on('click', () => {
+
+                // iframe.contentWindow.document.open();
+                // iframe.contentWindow.document.write('');
+                // iframe.contentWindow.document.close();
+
                 var form = document.createElement("form");
-                var element1 = document.createElement("input"); 
-                var element2 = document.createElement("input");  
+
+                var match_ids = document.createElement('input')
+                var order_by = document.createElement('input')
+                var date_range_from = document.createElement('input')
+                var date_range_to = document.createElement('input')    
             
                 form.method = "POST";
-                form.action = "login.php";   
-            
-                element1.value=un;
-                element1.name="un";
-                form.appendChild(element1);  
-            
-                element2.value=pw;
-                element2.name="pw";
-                form.appendChild(element2);
+                form.action = $('#pdf_url').val();
+                form.target = 'iframe_pdf'
+                $(form).hide()
+
+                match_ids.name = 'match_ids'
+                match_ids.value = selectedMatches
+
+                order_by.name = 'order_by'
+                order_by.value = $('[name="order_by"]:checked').val()
+
+                date_range_from.name = 'date_range_from'
+                date_range_from.value = $('#dtf').val()
+
+                date_range_to.name = 'date_range_to'
+                date_range_to.value = $('#dtt').val()
+
+                for (const v of [match_ids, order_by, date_range_from, date_range_to]) {
+                    form.appendChild(v)
+                }
+                form.appendChild($('[name="csrfmiddlewaretoken"]')[0])
             
                 document.body.appendChild(form);
             
                 form.submit();
+                $(iframe).show()
+                iframe.scrollIntoView({ behavior: "smooth" });
+                $('#smartwizard').css({
+                    'pointer-events': 'none',
+                    'opacity': 0.4
+                })
             })
         }
     })

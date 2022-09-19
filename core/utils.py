@@ -16,7 +16,7 @@ def fetch_resources(uri, rel):
     path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
     return path
  
-def generate_pdf(template_name, context_dict={}, css_name=None):
+def generate_pdf(template_name, context_dict={}):
     html = render_to_string(template_name, context_dict)
     # css_path = 'static/style.css'
     # if css_name:
