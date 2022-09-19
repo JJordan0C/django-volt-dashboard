@@ -4,8 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from apps.authentication.models import User
+from apps.authentication.models import User, Shop
 
 
 class LoginForm(forms.Form):
@@ -25,8 +24,8 @@ class LoginForm(forms.Form):
         ))
 
 
-class SignUpForm(UserCreationForm):
-    firts_name = forms.CharField(
+class CreateUserForm(forms.ModelForm):
+    first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Nome",
@@ -55,11 +54,12 @@ class SignUpForm(UserCreationForm):
             }
         ))
     password = forms.CharField(
-        disabled=True,
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Password",
-                "class": "form-control"
+                "class": "form-control",
+                "id": "passwUser",
+                "readonly": "readonly"
             }
         ))
     
@@ -77,10 +77,14 @@ class SignUpForm(UserCreationForm):
             attrs={
                 "class": "form-select"
             }
-        )
-    )
+        ))
     
-    shop_name = forms.CharField(
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name','username', 'email', 'password', 'dealer_id')
+
+class CreateShopForm(forms.ModelForm):
+    s_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Nome Negozio",
@@ -88,14 +92,14 @@ class SignUpForm(UserCreationForm):
             }
         ))
     
-    shop_number = forms.IntegerField(
+    s_tel = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
                 "placeholder": "Telefono Negozio",
                 "class": "form-control"
             }
         ))
-
+    
     class Meta:
-        model = User
-        fields = ('firts_name', 'last_name','username', 'email', 'password', 'dealer_id', 'shop_name', 'shop_number')
+        model = Shop
+        fields = ('s_name', 's_tel')

@@ -1,7 +1,8 @@
 $(function() {
     $( "#gen_pass" ).click(function() {
         $('[name="password"]').val(randomPassword(10))
-      });
+    });
+
 });
 
 function randomPassword(length) {

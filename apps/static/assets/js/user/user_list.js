@@ -279,6 +279,13 @@ $(function() {
 
     $( "#btn-edit" ).click(function() {
 
-      });
+    });
+
+    $( ".btn-delete-user" ).click( (e) => {
+        var btn = $(e.currentTarget);
+        const id = btn.data("tb-id");
+
+        $("#modalDeleteUser #userId").val(id);
+    })
 
 });

@@ -12,9 +12,9 @@ from apps.quote.models import Dealer
 # Create your models here.
 class Shop(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.TextField(max_length=320)
+    s_name = models.TextField(max_length=320)
     address = models.TextField(max_length=320)
-    tel = models.IntegerField()
+    s_tel = models.IntegerField(null=True, blank=True)
     
     
 class User(AbstractUser):

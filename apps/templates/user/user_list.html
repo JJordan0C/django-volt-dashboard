@@ -31,20 +31,20 @@
       <td width="20%">{{ user.username }}</td>
       <td width="20%">{{ user.first_name }}</td>
       <td width="20%">{{ user.last_name }}</td>
-      <td width="25%">{{ user.shop.name }}</td>
-      <td width="20%">{{ user.shop.tel }}</td>
-      <td><a class="edit" style="border:none; margin-left: 15px;"><i class="fa fa-edit" style="font-size:24px;"></i></a></td>
-      <td><button type="button" style="border:none; margin-left: 15px;" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-remove" style="font-size:20px; color:red;"></i></button></td>
+      <td width="25%">{{ user.shop.s_name }}</td>
+      <td width="20%">{{ user.shop.s_tel }}</td>
+      <td><a class="edit" href="" style="border:none; margin-left: 15px;"><i class="fa fa-edit" style="font-size:22px;"></i></a></td>
+      <td><button type="button" id="btnDelete" class="btn-delete-user" style="border:none; margin-left: 15px;" data-bs-toggle="modal" data-bs-target="#modalDeleteUser" data-tb-id="{{ user.id }}"><i class="fa fa-remove" style="font-size:20px; color:red;"></i></button></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>   
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDeleteUser" tabindex="-1" aria-labelledby="modalDeleteUserLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Eliminazione utente</h5>
+        <h5 class="modal-title" id="modalDeleteUserLabel">Eliminazione utente</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">Sicuro di voler eliminare?</div>
@@ -52,8 +52,8 @@
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
         <form action="{%url 'delete-user'%}" method="POST">
           {% csrf_token %}
-          <input type="hidden" name="user_id" value="">
-          <button type="submit" class="btn btn-success" id="delete" style="color:#ffffff">SI</button>
+          <input type="hidden" id="userId" name="user_id" value="">
+          <button type="submit" class="btn btn-success" style="color:#ffffff">SI</button>
         </form>
       </div>
     </div>
