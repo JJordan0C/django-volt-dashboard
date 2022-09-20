@@ -7,7 +7,7 @@ Copyright (c) 2019 - present AppSeed.us
 from apps.authentication.models import Shop, User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from .forms import CreateShopForm, LoginForm, CreateUserForm
+from .forms import CreateShopForm, EditShopForm, EditUserForm, LoginForm, CreateUserForm
 from django.contrib.auth.hashers import make_password
 
 
@@ -78,7 +78,6 @@ def register_user(request):
 
 def del_user(request):
     user_id = request.POST.get('user_id')
-    print(request.POST.get('user_id'))
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return redirect("user-list")
@@ -97,26 +96,38 @@ def user_list(request):
 
 def edit_user(request):
     dealer = request.user.get_dealer()
+    user_id = request.POST.get('user_id') if request.POST.get('user_id') is not None else request.GET.get('user_id') 
+    print(user_id)
+    user = get_object_or_404(User, id=user_id)
     msg = None
     success = False
-    
+    print(request.method)
     if request.method == "POST":
-        shopForm = CreateShopForm(request.POST)
-        userForm = CreateUserForm(request.POST)
+        shopForm = EditShopForm(request.POST, instance=user.shop)
+        userForm = EditUserForm(request.POST, instance=user)
+        print("sono l'edit")
         if shopForm.is_valid() and userForm.is_valid():
-            shop = shopForm.save()
-            user = userForm.save()
-            user.shop = shop
+            shopForm.save()
             userForm.save()
             msg = 'User modified'
             success = True
             return redirect("user-list")
-            
         else:
             msg = 'Form is not valid'
     else:
-        shopForm = CreateShopForm()
-        userForm = CreateUserForm()
+        shopForm = EditShopForm()
+        userForm = EditUserForm()
+        
+        userForm.fields["user_id"].initial = user.id
+        userForm.fields["username"].initial = user.username
+        userForm.fields["first_name"].initial = user.first_name
+        userForm.fields["last_name"].initial = user.last_name
+        userForm.fields["email"].initial = user.email
+        userForm.fields["password"].initial = user.password
+        userForm.fields["dealer_id"].initial = user.dealer_id
+        shopForm.fields["s_name"].initial = user.shop.s_name
+        shopForm.fields["s_tel"].initial = user.shop.s_tel
+        
         
     context = {
         'userForm': userForm,
@@ -126,4 +137,4 @@ def edit_user(request):
         'dealer':dealer
         }
 
-    return render(request, "user/create_user.html", context=context)
+    return render(request, "user/edit_user.html", context=context)
