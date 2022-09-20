@@ -8,6 +8,7 @@ from apps.authentication.models import Shop, User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from .forms import CreateShopForm, LoginForm, CreateUserForm
+from django.contrib.auth.hashers import make_password
 
 
 def login_view(request):
@@ -44,7 +45,8 @@ def register_user(request):
             shop = shopForm.save()
             user = userForm.save()
             user.shop = shop
-            userForm.save()
+            user.password = make_password(user.password)
+            user.save()
             # username = form.cleaned_data.get("username")
             # first_name = form.cleaned_data.get("first_name")
             # last_name = form.cleaned_data.get("last_name")
