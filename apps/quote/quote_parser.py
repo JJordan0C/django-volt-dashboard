@@ -1,4 +1,5 @@
 import pytz
+from re import sub
 import requests
 import orjson
 from django.conf import settings
@@ -20,7 +21,10 @@ def initial_config():
     def save_quote_types(dealer: Dealer):
         data = get_data(dealer.id)
         
-        quote_types = data['desquote'].split('?')[:-1]
+        # Alt + 21
+        data['desquote'] = sub('\?(?!\|)', '§', data['desquote'])
+        
+        quote_types = data['desquote'].split('§')[:-1]
         
         sub_model = dealer.get_sub_model(dealer.SUB_MODEL.QUOTE_TYPE)
         

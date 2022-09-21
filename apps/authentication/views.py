@@ -34,6 +34,7 @@ def login_view(request):
 
 
 def register_user(request):
+    users = 0
     dealer = request.user.get_dealer()
     msg = None
     success = False
@@ -58,6 +59,7 @@ def register_user(request):
 
             msg = 'User created'
             success = True
+            users += 1
             return redirect("user-list")
             
         else:
