@@ -70,7 +70,6 @@ class QuoteView(View):
 class QuoteToPDFView(View):
 
     def post(self, request):
-        
         setlocale(LC_ALL, "it_IT")
         
         # data = {
@@ -82,27 +81,32 @@ class QuoteToPDFView(View):
         #     'date_range_to': localize_datetime(datetime.today().replace(hour=0, minute=1) + timedelta(days=5)),
         # }
         
-        # data = request.POST.get('data')
         dealer = request.user.get_dealer()
         QuoteType = dealer.get_sub_model(Dealer.SUB_MODEL.QUOTE_TYPE)
         Event = dealer.get_sub_model(Dealer.SUB_MODEL.EVENT)
         EventQuote = dealer.get_sub_model(Dealer.SUB_MODEL.EVENTQUOTE)
         
+        body = orjson.loads(request.body)
         data = {
-            #'quote_type_ids': range(150, 167),
             'quote_type_ids': settings.PDF_QUOTE_TYPES[dealer.id],
-            'match_ids': request.POST.get('match_ids').split(','),
-            'order_by': request.POST.get('order_by'),
-            'date_range_from': localize_datetime(datetime.strptime(request.POST.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
-            'date_range_to': localize_datetime(datetime.strptime(request.POST.get('date_range_to'), '%d/%m/%Y, %H:%M')),
+            'order_by': body.get('order_by'),
+            'date_range_from': localize_datetime(datetime.strptime(body.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
+            'date_range_to': localize_datetime(datetime.strptime(body.get('date_range_to'), '%d/%m/%Y, %H:%M')),
         }
+        
+        # data = {
+        #     #'quote_type_ids': range(150, 167),
+        #     'quote_type_ids': settings.PDF_QUOTE_TYPES[dealer.id],
+        #     'match_ids': request.POST.get('match_ids').split(','),
+        #     'order_by': request.POST.get('order_by'),
+        #     'date_range_from': localize_datetime(datetime.strptime(request.POST.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
+        #     'date_range_to': localize_datetime(datetime.strptime(request.POST.get('date_range_to'), '%d/%m/%Y, %H:%M')),
+        #     'view_type': request.POST.get('view_type')
+        # }
 
         quote_types = QuoteType.objects.filter(
             id__in=data['quote_type_ids'])
         events = Event.objects.filter(data__range=[data['date_range_from'], data['date_range_to']])
-        
-        if data['match_ids'] != '*':
-            events = events.filter(id__in=data['match_ids'])
         
         if data['order_by'] == 'date':
             events = events.order_by('data')
@@ -112,17 +116,38 @@ class QuoteToPDFView(View):
         
         tables = [events[x:x+68] for x in range(0, len(events),68)] # max 70 rows for each table
         dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
+        # if data['order_by'] != 'date':
+        #     dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
+        # else:
+            # dataframe_data = [{e.competition.name + f'C{i}': [] for i,e in enumerate(t_events)} for t_events in tables]
+            
         
         today = datetime.today()
         start = localize_datetime(today.replace(hour=0, minute=1))
         end = localize_datetime(today.replace(hour=9, minute=0) + timedelta(days=1))
         
         def generate_table(t_events, index):
-            for e in t_events:
+            for i, e in enumerate(t_events):
                 quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower()
                 + '_set').get().quote)[qt.id] for qt in quote_types)
                 
-                fast_code = str(e.fast_code)[::-1] if start <= e.data <= end else e.fast_code
+                # comp_name = e.competition.name if data['order_by'] != 'date' else e.competition.name + f'C{i}'
+                # comp_name = ''
+                # if data['order_by'] != 'date':
+                #     comp_name = e.competition.name
+                # else:
+                #     try:
+                #         if t_events[i-1].competition.name == e.competition.name:
+                #             comp_name = t_events[i-1].competition.name + f'C{i-1}'
+                #         else:
+                #             raise ''
+                #     except:
+                #         comp_name = e.competition.name + f'C{i}'
+                
+                if dealer.id == 9:
+                    fast_code = str(e.fast_code)[::-1] if start <= e.data <= end else e.fast_code
+                else:
+                    fast_code = '{}-{}'.format(e.competition.pal, e.avv)
                 
                 dataframe_data[index][e.competition.name].append(
                     (
@@ -149,7 +174,7 @@ class QuoteToPDFView(View):
         cols = [
             Column('MANIFESTAZIONE'),
             Column('DATA'),
-            Column('CODE'),
+            Column('CODE') if dealer.id == 9 else Column('PAL-AVV'),
             Column('AVVENIMENTO')
         ]
         #cols += [Column(qt.get_super_quote.upper(), qt.get_sub_quote.upper()) for qt in quote_types]
@@ -165,9 +190,10 @@ class QuoteToPDFView(View):
             'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0],
             'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
         }
-        #return render(request, 'quote/table_to_pdf.html', context=context)
+    
         filename = 'Quote_{}_{}.pdf'.format(dealer.name, today.strftime('%Y-%m-%d'))
-        res =  generate_pdf('quote/table_to_pdf.html', context)
-        res['Content-Disposition'] = 'filename*="{}"'.format(filename) # NOT WORKING
+        res =  generate_pdf('quote/table_to_pdf.html', context, filename)
+            # res = render(request, 'quote/table_to_pdf.html', context=context)
+            
         return res
 

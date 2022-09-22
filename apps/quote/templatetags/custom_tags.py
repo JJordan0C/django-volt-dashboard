@@ -12,11 +12,19 @@ def is_today(event_tuple:tuple):
     return event_date == today_date
 
 def short(val:str=None):
-    txt = val.split('-')
-    capital_chars = list(filter(lambda x: x.isupper(), txt[0]))
-    prefix = '.'.join(capital_chars) if len(capital_chars) > 1 else txt[0][:3]
-    val = f'{prefix}-{txt[1][1:]}' if len(txt) > 1 else txt[0]
-    return shorten(val, width=25, placeholder='...', drop_whitespace=True)
+    # txt = val.split('-')
+    # capital_chars = list(filter(lambda x: x.isupper(), txt[0]))
+    # prefix = '.'.join(capital_chars) if len(capital_chars) > 1 else txt[0][:3]
+    # val = f'{prefix}-{txt[1][1:]}' if len(txt) > 1 else txt[0]
+    txt = val.split(' ')
+    prefix = txt[0][:3] + '.'
+    val = prefix
+    for i,v in enumerate(txt):
+        if i != 0:
+            val += ' ' + v
+    if ' -' in val:
+        val = val.replace(' -', '')    
+    return val if len(val) <= 22 else val[:22]
 
 lbi = [] #left border indexes (for columns groups borders)
 def append_lbi(val, n_sub_cols):

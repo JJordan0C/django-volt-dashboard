@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import models
-from io import BytesIO, StringIO
-from django.http import HttpResponse
+from io import BytesIO, StringIO, SEEK_SET
+from django.http import HttpResponse, FileResponse
 from django.template.loader import get_template, render_to_string
 from django.core.files import File
 import os
@@ -16,12 +16,8 @@ def fetch_resources(uri, rel):
     path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
     return path
  
-def generate_pdf(template_name, context_dict={}):
+def generate_pdf(template_name, context_dict={}, filename=''):
     html = render_to_string(template_name, context_dict)
-    # css_path = 'static/style.css'
-    # if css_name:
-    #     css_path = css_name
-    # css = os.path.join(os.path.dirname(__file__), css_path)
     path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     options = {
@@ -39,8 +35,14 @@ def generate_pdf(template_name, context_dict={}):
     pdf = pdfkit.from_string(html, configuration=config,  options=options)
     output = BytesIO()
     output.write(pdf)
-    output.seek(0)
-    return HttpResponse(output.getvalue(), content_type='application/pdf')
+    output.seek(SEEK_SET)
+    # return HttpResponse(output.getvalue(), headers={
+    #     'Content-Type':'application/pdf',
+    #     'Content-Disposition': 'attachment; filename="{}"'.format(filename),
+    # })
+    return FileResponse(output, filename=filename, as_attachment=True, headers= {
+        'Content-Type': 'application/pdf'
+    })
 
 def get_key_from_value(dict:dict, value):
     try:

@@ -201,11 +201,11 @@
                             <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
                                 
                                 {% if forloop.counter == 1 %}
-                                    <td rowspan="{{val|length}}" class="rowspan-border" >
-                                        {%if key|length <= 25 or val|length > 1 %}
-                                            {{ key }}
+                                    <td rowspan="{{val|length}}" class="rowspan-border" 
+                                        {%if key|length >= 25 and val|length == 1 %}
+                                            style="letter-spacing:-1px">{{ key|short }}
                                         {% else %}
-                                            {{ key|short }}
+                                            >{{ key }}
                                         {% endif %}
                                     </td>
                                 {% endif %}
