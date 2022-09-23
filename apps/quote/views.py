@@ -88,6 +88,7 @@ class QuoteToPDFView(View):
         
         body = orjson.loads(request.body)
         data = {
+            'champs_ids':request.POST.get('champs_ids'),
             'quote_type_ids': settings.PDF_QUOTE_TYPES[dealer.id],
             'order_by': body.get('order_by'),
             'date_range_from': localize_datetime(datetime.strptime(body.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
@@ -106,7 +107,7 @@ class QuoteToPDFView(View):
 
         quote_types = QuoteType.objects.filter(
             id__in=data['quote_type_ids'])
-        events = Event.objects.filter(data__range=[data['date_range_from'], data['date_range_to']])
+        events = Event.objects.filter(competition__id__in=data['champs_ids'], data__range=[data['date_range_from'], data['date_range_to']])
         
         if data['order_by'] == 'date':
             events = events.order_by('data')

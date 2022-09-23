@@ -750,7 +750,7 @@ $(function() {
             
                 // form.submit();
                 params = {
-                    match_ids: selectedMatches,
+                    champs_ids: selectedChamps,
                     order_by: $('[name="order_by"]:checked').val(),
                     date_range_from: $('#dtf').val(),
                     date_range_to: $('#dtt').val(),
