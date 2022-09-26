@@ -59,7 +59,12 @@ def parse_quote():
         for event in data['eventi']:
             
             param_split = event['param'].split(':')
-            pal, avv = param_split[0], param_split[1]
+            
+            if dealer.id != 13:
+                pal, avv = param_split[0], param_split[1]  
+            else: 
+                pal, avv = param_split[-2], param_split[-3]
+            
             fastcode = param_split[2] if len(param_split) == 3 else None
             
             c_kwargs = {
@@ -94,21 +99,27 @@ def parse_quote():
                 events_quote_list.append(q_kwargs)
                 
         #objects = Competition.objects.bulk_update_or_create(competitions_list, ['name', 'pal'], match_field='name', yield_objects=True)
-        Competition.objects.bulk_update_or_create(competitions_list, ['name', 'pal'], match_field='name')
+        # Competition.objects.bulk_update_or_create(competitions_list, ['name', 'pal'], match_field='name',)
+        Competition.objects.bulk_create(competitions_list, ignore_conflicts = True)
         print('Competizioni aggiunte e aggiornate')
             #events_list[ind]['competition_id'] = comp.id
+            
         for e in events_list:
             e['competition'] = Competition.objects.get(name=e['competition_name'])
             del e['competition_name']
             
-        Event.objects.bulk_update_or_create([Event(**e) for e in events_list], events_list[0].keys(), match_field='name')
+        # Event.objects.bulk_update_or_create([Event(**e) for e in events_list], events_list[0].keys(), match_field='id',)
+        Event.objects.bulk_create([Event(**e) for e in events_list], ignore_conflicts = True)
         print('Eventi aggiunti e aggiornati')
         
         for q in events_quote_list:
+            print(q['event_name'])
             q['event'] = Event.objects.get(name=q['event_name'])
             del q['event_name']
+            # EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
+        
+        EventQuote.objects.bulk_create([EventQuote(**{x:y for x,y in q.items() if x != 'event_name'}) for q in events_quote_list], ignore_conflicts = True)
             
-        EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
         # quote_types = QuoteType.objects.all()
         # def save_quotes(l_eq_list):
         #     for eq_kwargs in l_eq_list:
@@ -128,7 +139,7 @@ def parse_quote():
             
         
     print('yeee parsing')
-    all_dealers = Dealer.all()
+    all_dealers = [Dealer.all()[2]]
     t_list = [Thread(target=parse, args=[d]) for d in all_dealers]
     
     for t in t_list:
