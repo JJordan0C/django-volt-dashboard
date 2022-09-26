@@ -16,7 +16,7 @@
 <table id="user-list" class="display" style="width:100%">
   <thead >
     <tr>
-      <th>Username</th>
+      <th>Email</th>
       <th width="20%">Nome</th>
       <th width="20%">Cognome</th>
       <th width="25%">Nome Shop</th>
@@ -28,7 +28,7 @@
   <tbody>
     {% for user in users %}
     <tr>
-      <td width="20%">{{ user.username }}</td>
+      <td width="20%">{{ user.email }}</td>
       <td width="20%">{{ user.first_name }}</td>
       <td width="20%">{{ user.last_name }}</td>
       <td width="25%">{{ user.shop.s_name }}</td>

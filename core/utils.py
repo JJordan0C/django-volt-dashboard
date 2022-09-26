@@ -53,3 +53,14 @@ def get_key_from_value(dict:dict, value):
 def localize_datetime(dt:datetime):
     tz = pytz.timezone('Europe/Rome')
     return tz.localize(dt)
+
+class Column:
+    def __init__(self, name: str, sub_columns: list = []):
+        self.name = name
+        self.sub_columns = sub_columns
+
+    def __str__(self):
+        return self.name + ' ' + ','.join(self.sub_columns)
+    
+def get_pdf_quote_types(QuoteType):
+    return [QuoteType(id=qt_id, name=settings.PDF_QUOTE_TYPES_NAMES[i]) for i, qt_id in enumerate(settings.PDF_QUOTE_TYPES[QuoteType().dealer.id])]

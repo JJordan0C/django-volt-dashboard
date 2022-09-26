@@ -8,10 +8,10 @@ from apps.authentication.models import User, Shop
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(
+    email = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Username",
+                "placeholder": "Email",
                 "class": "form-control"
             }
         ))

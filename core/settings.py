@@ -222,11 +222,11 @@ PDF_QUOTE_TYPES = {
     13 : [
         159, 160, 161,  # ESITO FINALE 1 X 2
         267, 268, 269,  # ESITO FINALE 1° TEMPO 1 X 2
-        99, 28, 1173,   # DOPPIA CHANCE 1X 12 X2 (NON SI TROVANO O 1X|1X 2X|2X ??)
-        1042, 1043,     # UNDER/OVER 1,5 U O
-        1044, 1045,     # UNDER/OVER 2,5 U O
-        1046, 1047,     # UNDER/OVER 3,5 U O
-        377, 378,       # GOAL/NOGOAL GG NG
+        99, 28, 1163,   # DOPPIA CHANCE 1X 12 X2 (NON SI TROVANO O 1X|1X 2X|2X ??)
+        1032, 1033,     # UNDER/OVER 1,5 U O
+        1034, 1035,     # UNDER/OVER 2,5 U O
+        1036, 1037,     # UNDER/OVER 3,5 U O
+        369, 370,       # GOAL/NOGOAL GG NG
     ],
     14 : [
         16, 17, 18,     # ESITO FINALE 1 X 2
@@ -248,6 +248,26 @@ PDF_QUOTE_TYPES = {
     ],
 }
 
+PDF_QUOTE_TYPES_NAMES = [
+    'ESITO FINALE 1X2|1',
+    'ESITO FINALE 1X2|X',
+    'ESITO FINALE 1X2|2',
+    'ESITO FINALE 1° TEMPO 1X2|1',
+    'ESITO FINALE 1° TEMPO 1X2|X',
+    'ESITO FINALE 1° TEMPO 1X2|2',
+    'DOPPIA CHANCE|1X',
+    'DOPPIA CHANCE|12',
+    'DOPPIA CHANCE|X2',
+    'UNDER/OVER 1,5|U',
+    'UNDER/OVER 1,5|O',
+    'UNDER/OVER 2,5|U',
+    'UNDER/OVER 2,5|O',
+    'UNDER/OVER 3,5|U',
+    'UNDER/OVER 3,5|O',
+    'GOAL/NOGOAL|GG',
+    'GOAL/NOGOAL|NG',
+]
+
            
 QUOTE_URL = "http://www.tradingm3.com/failbook/Sure/suresystem/service/bvaquoteall.aspx?book={dealer_id}&sport=0"
 
@@ -259,3 +279,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 X_FRAME_OPTIONS = 'ALLOWALL'
 
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+AUTHENTICATION_BACKENDS = ['apps.authentication.module.EmailBackend']

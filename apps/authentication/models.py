@@ -25,4 +25,4 @@ class User(AbstractUser):
        if self.dealer_id and not self.is_superuser:
            return Dealer.get(id=self.dealer_id)
        
-       return Dealer.all()[1]
+       return Dealer.all()[2]

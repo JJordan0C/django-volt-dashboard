@@ -1,7 +1,7 @@
 import orjson
 from django.shortcuts import get_object_or_404, render
 
-from core.utils import  generate_pdf, localize_datetime
+from core.utils import  generate_pdf, get_pdf_quote_types, localize_datetime
 from .models import *
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -88,7 +88,7 @@ class QuoteToPDFView(View):
         
         body = orjson.loads(request.body)
         data = {
-            'champs_ids':request.POST.get('champs_ids'),
+            'champs_ids':body.get('champs_ids'),
             'quote_type_ids': settings.PDF_QUOTE_TYPES[dealer.id],
             'order_by': body.get('order_by'),
             'date_range_from': localize_datetime(datetime.strptime(body.get('date_range_from'), '%d/%m/%Y, %H:%M')), 
@@ -105,8 +105,9 @@ class QuoteToPDFView(View):
         #     'view_type': request.POST.get('view_type')
         # }
 
-        quote_types = QuoteType.objects.filter(
-            id__in=data['quote_type_ids'])
+        # quote_types = QuoteType.objects.filter(
+        #     id__in=data['quote_type_ids'])
+        quote_types = get_pdf_quote_types(QuoteType)
         events = Event.objects.filter(competition__id__in=data['champs_ids'], data__range=[data['date_range_from'], data['date_range_to']])
         
         if data['order_by'] == 'date':
