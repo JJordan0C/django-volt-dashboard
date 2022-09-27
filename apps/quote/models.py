@@ -63,11 +63,12 @@ class BaseQuoteType(BaseQuoteModel):
     
 
 class BaseCompetition(BaseQuoteModel):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=255, unique=True)
     pal = models.IntegerField()
     
     class Meta:
         abstract = True
+        indexes = [ models.Index(fields=['name'])]
 
     @property
     def matches(self):
@@ -79,7 +80,7 @@ class BaseForeignKey(models.ForeignKey):
         super().__init__(*args, **kwargs)
 
 class BaseEvent(BaseQuoteModel):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=255, unique=True)
     data = models.DateTimeField(null=True)
     fast_code = models.IntegerField(null=True)
     avv = models.IntegerField(null=True)
@@ -95,6 +96,7 @@ class BaseEvent(BaseQuoteModel):
     
     class Meta:
         abstract = True
+        indexes = [ models.Index(fields=['name'])]
         # fields = ('name', 'data', 'fast_code', 'avv', 'competition_id')
 
 class BaseEventQuote(BaseQuoteModel):

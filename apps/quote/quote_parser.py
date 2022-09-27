@@ -113,27 +113,10 @@ def parse_quote():
         print('Eventi aggiunti e aggiornati')
         
         for q in events_quote_list:
-            print(q['event_name'])
             q['event'] = Event.objects.get(name=q['event_name'])
             del q['event_name']
-            # EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
-        
+        # EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
         EventQuote.objects.bulk_create([EventQuote(**{x:y for x,y in q.items() if x != 'event_name'}) for q in events_quote_list], ignore_conflicts = True)
-            
-        # quote_types = QuoteType.objects.all()
-        # def save_quotes(l_eq_list):
-        #     for eq_kwargs in l_eq_list:
-        #         event_name = Event.objects.get(name=eq_kwargs[0]['event_name'])
-        #         print(event_name, len(eq_kwargs))
-        #         for ind, qt in enumerate(quote_types):
-        #             eq_kwargs[ind]['event'] = event_name
-        #             eq_kwargs[ind]['qt'] = qt
-        #             del eq_kwargs[ind]['event_name']
-        #         EventQuote.objects.bulk_update_or_create([EventQuote(**eq) for eq in eq_kwargs], eq_kwargs[0].keys(), match_field='id')
-            
-        # t_list = [Thread(target=save_quotes, args=[x]) for x in np.array_split(events_quote_list, 4)]
-        # [t.start() for t in t_list]
-        # [t.join() for t in t_list]
         
         print('Quote Eventi aggiunte e aggiornate')
             
