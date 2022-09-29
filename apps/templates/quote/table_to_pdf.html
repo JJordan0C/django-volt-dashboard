@@ -155,8 +155,16 @@
                         <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
                         <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
                     </div>
-                    <div>
-                        <h1>Quote CALCIO</h1>
+                    <div style="text-align:center;">
+                        <h1>Quote CALCIO <br> 
+                            {% if days == 0 %}
+                                OGGI
+                            {% elif days == 1%}
+                                {{days}} GIORNO
+                            {% else %}
+                                {{days}} GIORNI
+                            {% endif %}
+                        </h1>
                     </div>
                 </div>
                 <table>

@@ -190,7 +190,8 @@ class QuoteToPDFView(View):
             'columns': cols,
             'dealer_images':['{}_{}.png'.format(dealer.id, i) for i in range(1,4)] if dealer.name == "Goldbet" else [str(dealer.id) + '.png'],
             'col_group_borders_childs': [i for i,v in enumerate(cols) if len(v.sub_columns) > 0],
-            'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S')
+            'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S'),
+            'days': (data['date_range_to']-data['date_range_from']).days
         }
     
         filename = 'Quote_{}_{}.pdf'.format(dealer.name, today.strftime('%Y-%m-%d'))

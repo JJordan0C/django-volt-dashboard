@@ -32,6 +32,7 @@ def initial_config():
             
             qt_list = [sub_model(name=q) for q in quote_types ]
             print(sub_model, len(qt_list))
+            print(set([x for x in qt_list if qt_list.count(x) > 1]))
             sub_model.objects.bulk_create(qt_list, ignore_conflicts=True)
     
     all_dealers = Dealer.all()
