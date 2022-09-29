@@ -32,7 +32,6 @@ def initial_config():
             
             qt_list = [sub_model(name=q) for q in quote_types ]
             print(sub_model, len(qt_list))
-            print(set([x for x in qt_list if qt_list.count(x) > 1]))
             sub_model.objects.bulk_create(qt_list, ignore_conflicts=True)
     
     all_dealers = Dealer.all()
@@ -116,14 +115,14 @@ def parse_quote():
         for q in events_quote_list:
             q['event'] = Event.objects.get(name=q['event_name'])
             del q['event_name']
-        # EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
-        EventQuote.objects.bulk_create([EventQuote(**{x:y for x,y in q.items() if x != 'event_name'}) for q in events_quote_list], ignore_conflicts = True)
+        EventQuote.objects.bulk_update_or_create([EventQuote(**q) for q in events_quote_list], events_quote_list[0].keys(), match_field='event_id')
+        #EventQuote.objects.bulk_create([EventQuote(**{x:y for x,y in q.items() if x != 'event_name'}) for q in events_quote_list], ignore_conflicts = True)
         
         print('Quote Eventi aggiunte e aggiornate')
             
         
     print('yeee parsing')
-    all_dealers = [Dealer.all()[2]]
+    all_dealers = Dealer.all()
     t_list = [Thread(target=parse, args=[d]) for d in all_dealers]
     
     for t in t_list:

@@ -109,7 +109,6 @@ class QuoteToPDFView(View):
         #     id__in=data['quote_type_ids'])
         quote_types = get_pdf_quote_types(QuoteType)
         events = Event.objects.filter(competition__id__in=data['champs_ids'], data__range=[data['date_range_from'], data['date_range_to']])
-        
         if data['order_by'] == 'date':
             events = events.order_by('data')
             
@@ -193,7 +192,6 @@ class QuoteToPDFView(View):
             'date_label': datetime.now().strftime('Aggiornamento di %A %d %B %Y alle ore %H:%M:%S'),
             'days': (data['date_range_to']-data['date_range_from']).days
         }
-    
         filename = 'Quote_{}_{}.pdf'.format(dealer.name, today.strftime('%Y-%m-%d'))
         res =  generate_pdf('quote/table_to_pdf.html', context, filename)
             # res = render(request, 'quote/table_to_pdf.html', context=context)
