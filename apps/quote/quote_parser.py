@@ -27,7 +27,6 @@ def initial_config():
         quote_types = data['desquote'].split('§')[:-1]
         
         sub_model = dealer.get_sub_model(dealer.SUB_MODEL.QUOTE_TYPE)
-        
         if sub_model.objects.all().count() < len(quote_types):
             
             qt_list = [sub_model(name=q) for q in quote_types ]

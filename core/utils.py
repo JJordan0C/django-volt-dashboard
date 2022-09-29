@@ -63,4 +63,5 @@ class Column:
         return self.name + ' ' + ','.join(self.sub_columns)
     
 def get_pdf_quote_types(QuoteType):
-    return [QuoteType(id=qt_id, name=settings.PDF_QUOTE_TYPES_NAMES[i]) for i, qt_id in enumerate(settings.PDF_QUOTE_TYPES[QuoteType().dealer.id])]
+    qs = [QuoteType.objects.get(name=x) for x in settings.PDF_QUOTE_TYPES[QuoteType().dealer.id]]   
+    return [QuoteType(id=qt.id, name=settings.PDF_QUOTE_TYPES_NAMES[i]) for i, qt in enumerate(qs)]

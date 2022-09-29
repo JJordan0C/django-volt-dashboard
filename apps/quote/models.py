@@ -20,7 +20,6 @@ def base_meta(obj):
 
 class BaseQuoteModel(models.Model):
     id = models.AutoField(primary_key=True)
-    objects = BulkUpdateOrCreateQuerySet.as_manager()
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -60,6 +59,9 @@ class BaseQuoteType(BaseQuoteModel):
     @property
     def get_super_quote(self):
         return self.name.split('|')[0]
+    
+    def __str__(self) -> str:
+        return '{}: {}'.format(str(self.id), self.name)
     
 
 class BaseCompetition(BaseQuoteModel):
@@ -101,6 +103,7 @@ class BaseEvent(BaseQuoteModel):
 
 class BaseEventQuote(BaseQuoteModel):
     
+    objects = BulkUpdateOrCreateQuerySet.as_manager()
     #quote = models.FloatField(null=True)
     quote = models.JSONField(null=True)
     

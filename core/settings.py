@@ -202,49 +202,49 @@ DEALERS = {
 
 PDF_QUOTE_TYPES = {
     9 : [
-        104, 105, 106,  # ESITO FINALE 1 X 2
-        191, 192, 193,  # ESITO FINALE 1° TEMPO 1 X 2
-        801, 802, 803,  # DOPPIA CHANCE 1X 12 X2
-        1612, 1613,     # UNDER/OVER 1,5 U O
-        1622, 1623,     # UNDER/OVER 2,5 U O
-        1624, 1625,     # UNDER/OVER 3,5 U O
-        970, 971,       # GOAL/NOGOAL GG NG
-    ],
+            '1X2|1', '1X2|X', '1X2|2',
+            '1X2 1T|1', '1X2 1T|X', '1X2 1T|2',
+            'DC|1X', 'DC|12', 'DC|X2',
+            'U/O 1.5|U', 'U/O 1.5|O',
+            'U/O 2.5|U', 'U/O 2.5|O',
+            'U/O 3.5|U', 'U/O 3.5|O',
+            'GG/NG|GG', 'GG/NG|NG',
+        ],
     11 : [
-        160, 161, 162,  # ESITO FINALE 1 X 2
-        301, 302, 303,  # ESITO FINALE 1° TEMPO 1 X 2
-        546, 547, 548,  # DOPPIA CHANCE 1X 12 X2  (DA VEDERE SE GIUSTO PERCHE' DC IN/DC OUT ???)
-        1601, 1602,     # UNDER/OVER 1,5 U O
-        1603, 1604,     # UNDER/OVER 2,5 U O
-        1609, 1610,     # UNDER/OVER 3,5 U O
-        613, 614,       # GOAL/NOGOAL GG NG
+        '1X2 FINALE|1', '1X2 FINALE|X', '1X2 FINALE|2',  
+        '1X2 TEMPO 1|1', '1X2 TEMPO 1|X', '1X2 TEMPO 1|2',  
+        'DOPPIA CHANCE IN|1X', 'DOPPIA CHANCE IN|12', 'DOPPIA CHANCE IN|X2',  
+        'UNDER/OVER 1.5|UNDER', 'UNDER/OVER 1.5|OVER',     
+        'UNDER/OVER 2.5|UNDER', 'UNDER/OVER 2.5|OVER',   
+        'UNDER/OVER 3.5|UNDER', 'UNDER/OVER 3.5|OVER',
+        'GOL/NOGOL|GOL', 'GOL/NOGOL|NOGOL',       
     ],
     13 : [
-        159, 160, 161,  # ESITO FINALE 1 X 2
-        267, 268, 269,  # ESITO FINALE 1° TEMPO 1 X 2
-        99, 28, 1163,   # DOPPIA CHANCE 1X 12 X2 (NON SI TROVANO O 1X|1X 2X|2X ??)
-        1032, 1033,     # UNDER/OVER 1,5 U O
-        1034, 1035,     # UNDER/OVER 2,5 U O
-        1036, 1037,     # UNDER/OVER 3,5 U O
-        369, 370,       # GOAL/NOGOAL GG NG
+        '1X2|1', '1X2|X', '1X2|2',
+        '1X2 1T|1', '1X2 1T|X', '1X2 1T|2',  
+        '1X|1X', '12|12', '1X|1X',   
+        'MULTIGOL 1-2 |SI', 'MULTIGOL 1-2 |NO',     
+        'MULTIGOL 2-3 |SI', 'MULTIGOL 2-3 |NO',     
+        'MULTIGOL 3-4 |SI', 'MULTIGOL 3-4 |NO',
+        'GG/NG|GOAL', 'GG/NG|NOGOAL',       
     ],
     14 : [
-        16, 17, 18,     # ESITO FINALE 1 X 2
-        660, 661, 662,  # ESITO FINALE 1° TEMPO 1 X 2
-        298, 299, 300,  # DOPPIA CHANCE 1X 12 X2
-        554, 553,       # UNDER/OVER 1,5 U O
-        560, 559,       # UNDER/OVER 2,5 U O
-        566, 565,       # UNDER/OVER 3,5 U O
-        365, 366,       # GOAL/NOGOAL GG NG
+        '1X2|1', '1X2|X', '1X2|2', 
+        'Primo Tempo|1-Primo Tempo', 'Primo Tempo|X-Primo Tempo', 'Primo Tempo|2-Primo Tempo', 
+        'Doppia Chance|1X DC', 'Doppia Chance|12 DC', 'Doppia Chance|X2 DC',  
+        'Over/Under 1.5|Under 1.5', 'Over/Under 1.5|Over 1.5',       
+        'Over/Under 2.5|Under 2.5', 'Over/Under 2.5|Over 2.5',       
+        'Over/Under 3.5|Under 3.5', 'Over/Under 3.5|Over 3.5',       
+        'Gol/No Gol|GG', 'Gol/No Gol|NG',       
     ],
     15 : [
-        1, 2, 3,        # ESITO FINALE 1 X 2
-        332, 333, 334,  # ESITO FINALE 1° TEMPO 1 X 2
-        104, 105, 106,  # DOPPIA CHANCE 1X 12 X2
-        380, 381,       # UNDER/OVER 1,5 U O
-        386, 387,       # UNDER/OVER 2,5 U O
-        392, 393,       # UNDER/OVER 3,5 U O
-        115, 116,       # GOAL/NOGOAL GG NG
+        '1X2|1', '1X2|X', '1X2|2',       
+        'Solo primo tempo|1', 'Solo primo tempo|X', 'Solo primo tempo|2',  
+        'Doppia chance|1X', 'Doppia chance|12', 'Doppia chance|X2',  
+        'under/over 1.5|under 1.5 gol', 'under/over 1.5|over 1.5 gol',       
+        'under/over 2.5|under 2.5 gol', 'under/over 2.5|over 2.5 gol',       
+        'under/over 3.5|under 3.5 gol', 'under/over 3.5|over 3.5 gol',
+        'Goal/No Goal|goal', 'Goal/No Goal|no goal',       
     ],
 }
 
@@ -281,3 +281,10 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 AUTHENTICATION_BACKENDS = ['apps.authentication.module.EmailBackend']
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache',
+    }
+}

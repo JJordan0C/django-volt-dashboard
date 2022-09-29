@@ -10,6 +10,8 @@ from django.core import serializers
 from locale import setlocale, LC_ALL
 from threading import Thread
 from datetime import datetime, timedelta
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 
@@ -68,7 +70,8 @@ class QuoteView(View):
             
             
 class QuoteToPDFView(View):
-
+    
+    # method_decorator(cache_page(60 * 60))
     def post(self, request):
         setlocale(LC_ALL, "it_IT")
         
@@ -129,21 +132,20 @@ class QuoteToPDFView(View):
         
         def generate_table(t_events, index):
             for i, e in enumerate(t_events):
-                quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower()
-                + '_set').get().quote)[qt.id] for qt in quote_types)
-                
-                # comp_name = e.competition.name if data['order_by'] != 'date' else e.competition.name + f'C{i}'
-                # comp_name = ''
-                # if data['order_by'] != 'date':
-                #     comp_name = e.competition.name
-                # else:
+                # quotes = ()
+                # for qt in quote_types:
+                #     a = getattr(e, EventQuote.__name__.lower() + '_set').get().quote
                 #     try:
-                #         if t_events[i-1].competition.name == e.competition.name:
-                #             comp_name = t_events[i-1].competition.name + f'C{i-1}'
-                #         else:
-                #             raise ''
+                #         quotes = quotes + tuple(orjson.loads(a)[qt.id])
                 #     except:
-                #         comp_name = e.competition.name + f'C{i}'
+                #         print(qt.id, qt.name, 'io vado male')
+                
+                # raise Exception('dio')
+                try:
+                    quotes = tuple(orjson.loads(getattr(e, EventQuote.__name__.lower()
+                    + '_set').get().quote)[qt.id-1] for qt in quote_types)
+                except:
+                    continue
                 
                 if dealer.id == 9:
                     fast_code = str(e.fast_code)[::-1] if start <= e.data <= end else e.fast_code
