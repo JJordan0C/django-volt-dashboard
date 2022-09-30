@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from .forms import CreateShopForm, EditShopForm, EditUserForm, LoginForm, CreateUserForm
 from django.contrib.auth.hashers import make_password
-
+from django.db.models import Q
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -42,6 +42,7 @@ def register_user(request):
     if request.method == "POST":
         shopForm = CreateShopForm(request.POST)
         userForm = CreateUserForm(request.POST)
+        print(shopForm.errors)
         if shopForm.is_valid() and userForm.is_valid():
             shop = shopForm.save()
             user = userForm.save()
@@ -85,14 +86,10 @@ def del_user(request):
     return redirect("user-list")
 
 def user_list(request):
-    dealer = request.user.get_dealer()
-    users = User.objects.all()
-    shops = Shop.objects.all()
+    users = User.objects.filter(~Q(id=request.user.id))
     
     context = {
         'users': users,
-        'shops' : shops,
-        'dealer': dealer
         }
     return render(request, "user/user_list.html", context=context)
 
@@ -107,7 +104,6 @@ def edit_user(request):
     if request.method == "POST":
         shopForm = EditShopForm(request.POST, instance=user.shop)
         userForm = EditUserForm(request.POST, instance=user)
-        print("sono l'edit")
         if shopForm.is_valid() and userForm.is_valid():
             shopForm.save()
             userForm.save()

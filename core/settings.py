@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'apps.authentication.config.AuthConfig',
     
     'django_apscheduler',
-    'bulk_update_or_create'
+    'bulk_update_or_create',
+    "phonenumber_field"
 ]
 
 MIDDLEWARE = [
@@ -288,3 +289,5 @@ CACHES = {
         'LOCATION': 'cache',
     }
 }
+
+PHONENUMBER_DEFAULT_REGION = 'IT'

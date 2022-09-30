@@ -685,8 +685,20 @@ $(function() {
     const TempusDominus = window.tempusDominus.TempusDominus
     const Namespace = window.tempusDominus.Namespace
 
-    let dt_from = new TempusDominus(document.querySelector('#dt_from'));
-    let dt_to = new TempusDominus(document.querySelector('#dt_to'));
+    let dt_from = new TempusDominus(document.querySelector('#dt_from'),
+        {
+            restrictions: {
+                minDate: new Date(),
+            }
+        }
+    );
+    let dt_to = new TempusDominus(document.querySelector('#dt_to'),
+        {
+            restrictions: {
+                minDate: new Date(),
+            }
+        }
+    );
 
     document.querySelector('#dt_from').addEventListener(Namespace.events.change, (e) => {
         dt_to.updateOptions({

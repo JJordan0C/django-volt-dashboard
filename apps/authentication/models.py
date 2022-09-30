@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from core.task import scheduler
+from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.quote.models import Dealer
 
@@ -14,7 +15,7 @@ class Shop(models.Model):
     id = models.AutoField(primary_key=True)
     s_name = models.TextField(max_length=320)
     address = models.TextField(max_length=320)
-    s_tel = models.IntegerField(null=True, blank=True)
+    s_tel = PhoneNumberField()
     
     
 class User(AbstractUser):
@@ -25,4 +26,4 @@ class User(AbstractUser):
        if self.dealer_id and not self.is_superuser:
            return Dealer.get(id=self.dealer_id)
        
-       return Dealer.all()[2]
+       return Dealer.all()[0]

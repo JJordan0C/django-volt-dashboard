@@ -5,7 +5,8 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from apps.authentication.models import User, Shop
-
+from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import RegionalPhoneNumberWidget
 
 class LoginForm(forms.Form):
     email = forms.CharField(
@@ -92,8 +93,9 @@ class CreateShopForm(forms.ModelForm):
             }
         ))
     
-    s_tel = forms.IntegerField(
-        widget=forms.NumberInput(
+    s_tel = PhoneNumberField(
+        region='IT',
+        widget=RegionalPhoneNumberWidget(
             attrs={
                 "placeholder": "Telefono Negozio",
                 "class": "form-control"

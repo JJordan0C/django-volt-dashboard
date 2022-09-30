@@ -8,7 +8,8 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-12 mb-4">
+        <h1> Dashboard </h1>
+        {% comment %} <div class="col-12 mb-4">
             <div class="card bg-yellow-100 border-0 shadow">
                 <div class="card-header d-sm-flex flex-row align-items-center flex-0">
                     <div class="d-block mb-3 mb-sm-0">
@@ -29,7 +30,7 @@
                     <div class="ct-chart-sales-value ct-double-octave ct-series-g"></div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
             <div class="card border-0 shadow">
                 <div class="card-body">
@@ -40,20 +41,20 @@
                             </div>
                             <div class="d-sm-none">
                                 <h2 class="h5">Utenti </h2>
-                                <h3 class="fw-extrabold mb-1">345,678</h3>
+                                <h3 class="fw-extrabold mb-1">{{ users }}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
                             <div class="d-none d-sm-block">
                                 <h2 class="h6 text-gray-400 mb-0">Utenti Registrati</h2>
-                                <h3 class="fw-extrabold mb-2">345k</h3>
+                                <h3 class="fw-extrabold mb-2">{{ users }}</h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <div class="row">
+    {% comment %} <div class="row">
         <div class="col-12 col-xl-8">
             <div class="row">
                 <div class="col-12 mb-4">
@@ -473,7 +474,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
 {% endblock content %}
 

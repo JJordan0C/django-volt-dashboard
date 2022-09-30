@@ -168,7 +168,13 @@
                     </div>
                 </div>
                 <table>
-                    <div class="watermark">watermark</div>
+                    <div class="watermark">
+                        {% if request.user.is_superuser%}
+                            watermark
+                        {% else %}
+                            {{ request.user.shop.name }}
+                        {% endif %}
+                    </div>
                     <thead>
                         <tr>
                             {% for col in columns %}

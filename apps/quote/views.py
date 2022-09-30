@@ -12,21 +12,20 @@ from threading import Thread
 from datetime import datetime, timedelta
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from apps.authentication.models import User
+from django.db.models import Q
+from .top_competitions import top
 # Create your views here.
 
-
-class TestView(View):
-    def get(self, request):
-        from .quote_parser import parse_quote
-        parse_quote()
 
 
 class DashboardView(View):
     def get(self, request):
         dealer = request.user.get_dealer()
-        
+        users = User.objects.filter(~Q(is_superuser=False)).count()
         context = {
-            'dealer': dealer
+            'dealer': dealer,
+            'users': users
         }
         return render(request, 'home/dashboard.html', context=context)
 
@@ -111,14 +110,23 @@ class QuoteToPDFView(View):
         # quote_types = QuoteType.objects.filter(
         #     id__in=data['quote_type_ids'])
         quote_types = get_pdf_quote_types(QuoteType)
+        
+        import time 
+        start = time.time()
+        
         events = Event.objects.filter(competition__id__in=data['champs_ids'], data__range=[data['date_range_from'], data['date_range_to']])
         if data['order_by'] == 'date':
             events = events.order_by('data')
             
         if data['order_by'] == 'country':
             events = events.order_by('competition__name')
+            
+        if data['order_by'] == 'top':
+            events = [e for t in top[dealer.id] for e in events if e.competition.name == t]
+        end = time.time()
+        print(events, (end-start))
         
-        tables = [events[x:x+68] for x in range(0, len(events),68)] # max 70 rows for each table
+        tables = [events[x:x+74] for x in range(0, len(events),74)] # max 76 rows for each table
         dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
         # if data['order_by'] != 'date':
         #     dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]

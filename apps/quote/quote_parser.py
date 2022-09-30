@@ -60,11 +60,14 @@ def parse_quote():
             param_split = event['param'].split(':')
             
             if dealer.id != 13:
-                pal, avv = param_split[0], param_split[1]  
+                if dealer.id == 9:
+                    pal, avv = param_split[1], param_split[2]  
+                else:
+                    pal, avv = param_split[0], param_split[1]  
             else: 
                 pal, avv = param_split[-2], param_split[-3]
             
-            fastcode = param_split[2] if len(param_split) == 3 else None
+            fastcode = param_split[0] if len(param_split) == 3 else None
             
             c_kwargs = {
                 'name' : event['compet'],
