@@ -775,6 +775,7 @@ $(function() {
                 xhr.onload = function() {
                     var blobUrl = URL.createObjectURL(xhr.response);
                     iframe.src = blobUrl
+                    $(iframe).css('background', '');
                 };
                 xhr.send(JSON.stringify(params))
 

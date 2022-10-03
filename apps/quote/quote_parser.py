@@ -131,3 +131,15 @@ def parse_quote():
         t.start()
     for t in t_list:
         t.join()
+        
+        
+def remove_old_matches():
+    
+    def _remove(dealer):
+        Event = dealer.get_sub_model(Dealer.SUB_MODEL.EVENT)
+        Event.objects.filter(data__lt=localize_datetime(datetime.today())).delete()
+    
+    t_list = [Thread(target=_remove, args=[d]) for d in Dealer.all()]
+    
+    [t.start() for t in t_list]
+    [t.join() for t in t_list]

@@ -140,114 +140,120 @@
     </head>
 
     <body>
-        {% for data in tables_data%}
-        <div class="page">
-            <div class="table">
-                <div class="container">
-                    <div class="container" style="margin-top: 2.5%">
-                        {% for dealer_image in dealer_images %}
-                            {% with '/img/dealers/'|add:dealer_image as img %}
-                                <div><img class="dealer" src="data:;base64,{% image img %}"/></div>
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
-                    <div>
-                        <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
-                        <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
-                    </div>
-                    <div style="text-align:center;">
-                        <h1>Quote CALCIO <br> 
-                            {% if days == 0 %}
-                                OGGI
-                            {% elif days == 1%}
-                                {{days}} GIORNO
-                            {% else %}
-                                {{days}} GIORNI
-                            {% endif %}
-                        </h1>
-                    </div>
-                </div>
-                <table>
-                    <div class="watermark">
-                        {% if request.user.is_superuser%}
-                            watermark
-                        {% else %}
-                            {{ request.user.shop.name }}
-                        {% endif %}
-                    </div>
-                    <thead>
-                        <tr>
-                            {% for col in columns %}
-                                {% with col.sub_columns|length as sub_col_len%}
-                                    {% if sub_col_len > 0 %}
-                                        <th scope="col" colspan="{{sub_col_len}}" class="th">{{col.name}}</th>
-                                    {% else %}
-                                        <th></th>
-                                    {% endif %}
+        {% if err %}
+            <center>
+                <h1>{{err}}</h1>
+            </center>
+        {% else %}
+            {% for data in tables_data%}
+            <div class="page">
+                <div class="table">
+                    <div class="container">
+                        <div class="container" style="margin-top: 2.5%">
+                            {% for dealer_image in dealer_images %}
+                                {% with '/img/dealers/'|add:dealer_image as img %}
+                                    <div><img class="dealer" src="data:;base64,{% image img %}"/></div>
                                 {% endwith %}
                             {% endfor %}
-                        </tr>
-                        <tr>
-                            {% for col in columns %}
-                                {% with col.sub_columns|length as sub_col_len%}
-                                    {% if sub_col_len == 0 %}
-                                        <th scope="col" class="th">{{col.name}}</th>
-                                    {% else %}
-                                        {% append_lbi forloop.counter sub_col_len %}
-                                        {% for c in col.sub_columns%}
-                                            <th scope="col" data-sub-col="true" class="th-quote th">{{c}}</th>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% comment %} {% for d_tuple in data %}
-                            <tr>
-                                {% for d in d_tuple %}
-                                    <td>{{d}}</td>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %} {% endcomment %}
-                        {% for key, val in data.items %}
-                            {% for d_tuple in val %}
-                            <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
-                                
-                                {% if forloop.counter == 1 %}
-                                    <td rowspan="{{val|length}}" class="rowspan-border" 
-                                        {%if key|length >= 25 and val|length == 1 %}
-                                            style="letter-spacing:-1px">{{ key|short }}
-                                        {% else %}
-                                            >{{ key }}
-                                        {% endif %}
-                                    </td>
+                        </div>
+                        <div>
+                            <img class="aams" src="data:;base64,{% image '/img/aams-logos.png' %}"/>
+                            <img class="aams" src="data:;base64,{% image '/img/18+.png' %}"/>
+                        </div>
+                        <div style="text-align:center;">
+                            <h1>Quote CALCIO <br> 
+                                {% if days == 0 %}
+                                    OGGI
+                                {% elif days == 1%}
+                                    {{days}} GIORNO
+                                {% else %}
+                                    {{days}} GIORNI
                                 {% endif %}
-    
-                                {% for d in d_tuple%}
-                                    <td class="{% if forloop.counter == 2 and d_tuple|is_today %}today-fastcode{% endif %}"
-                                    style="{% if forloop.counter|is_in_lbi %}border-left:solid;{% endif %} {% if forloop.counter > 3 %}text-align:center;{% endif %}" >
-                                    {%if d == 0 %}
-                                        - - -
-                                    {% else %}
-                                        {{ d }}
-                                    {% endif %}
-                                    </td>
+                            </h1>
+                        </div>
+                    </div>
+                    <table>
+                        <div class="watermark">
+                            {% if request.user.is_superuser%}
+                                watermark
+                            {% else %}
+                                {{ request.user.shop.name }}
+                            {% endif %}
+                        </div>
+                        <thead>
+                            <tr>
+                                {% for col in columns %}
+                                    {% with col.sub_columns|length as sub_col_len%}
+                                        {% if sub_col_len > 0 %}
+                                            <th scope="col" colspan="{{sub_col_len}}" class="th">{{col.name}}</th>
+                                        {% else %}
+                                            <th></th>
+                                        {% endif %}
+                                    {% endwith %}
                                 {% endfor %}
                             </tr>
+                            <tr>
+                                {% for col in columns %}
+                                    {% with col.sub_columns|length as sub_col_len%}
+                                        {% if sub_col_len == 0 %}
+                                            <th scope="col" class="th">{{col.name}}</th>
+                                        {% else %}
+                                            {% append_lbi forloop.counter sub_col_len %}
+                                            {% for c in col.sub_columns%}
+                                                <th scope="col" data-sub-col="true" class="th-quote th">{{c}}</th>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% comment %} {% for d_tuple in data %}
+                                <tr>
+                                    {% for d in d_tuple %}
+                                        <td>{{d}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %} {% endcomment %}
+                            {% for key, val in data.items %}
+                                {% for d_tuple in val %}
+                                <tr {% if val|length == forloop.counter %}style="border-bottom:solid"{%endif%}>
+                                    
+                                    {% if forloop.counter == 1 %}
+                                        <td rowspan="{{val|length}}" class="rowspan-border" 
+                                            {%if key|length >= 25 and val|length == 1 %}
+                                                style="letter-spacing:-1px">{{ key|short }}
+                                            {% else %}
+                                                >{{ key }}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+        
+                                    {% for d in d_tuple%}
+                                        <td class="{% if forloop.counter == 2 and d_tuple|is_today %}today-fastcode{% endif %}"
+                                        style="{% if forloop.counter|is_in_lbi %}border-left:solid;{% endif %} {% if forloop.counter > 3 %}text-align:center;{% endif %}" >
+                                        {%if d == 0 %}
+                                            - - -
+                                        {% else %}
+                                            {{ d }}
+                                        {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div class="btm-txt">
-                    <h5>{{date_label}}
-                        <br>
-                        Locandina informativa suscettibile di errori e variazioni. Le date e gli orari degli avvenimenti sono comunicati ufficialmente da AAMS
-                    </h5>
+                        </tbody>
+                    </table>
+                    <div class="btm-txt">
+                        <h5>{{date_label}}
+                            <br>
+                            Locandina informativa suscettibile di errori e variazioni. Le date e gli orari degli avvenimenti sono comunicati ufficialmente da AAMS
+                        </h5>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
     </body>
 
 </html>

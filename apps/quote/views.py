@@ -115,6 +115,10 @@ class QuoteToPDFView(View):
         start = time.time()
         
         events = Event.objects.filter(competition__id__in=data['champs_ids'], data__range=[data['date_range_from'], data['date_range_to']])
+        
+        if events.count() == 0:
+            return render(request, 'quote/table_to_pdf.html', context={'err': 'Nessun Evento nelle date selezionate'})
+        
         if data['order_by'] == 'date':
             events = events.order_by('data')
             
@@ -203,8 +207,7 @@ class QuoteToPDFView(View):
             'days': (data['date_range_to']-data['date_range_from']).days
         }
         filename = 'Quote_{}_{}.pdf'.format(dealer.name, today.strftime('%Y-%m-%d'))
-        res =  generate_pdf('quote/table_to_pdf.html', context, filename)
             # res = render(request, 'quote/table_to_pdf.html', context=context)
             
-        return res
+        return generate_pdf('quote/table_to_pdf.html', context, filename)
 
