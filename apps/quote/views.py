@@ -128,7 +128,7 @@ class QuoteToPDFView(View):
         if data['order_by'] == 'top':
             events = [e for t in top[dealer.id] for e in events if e.competition.name == t]
         end = time.time()
-        print(events, (end-start))
+        print('CALCOLO EVENTI', (end-start))
         
         tables = [events[x:x+74] for x in range(0, len(events),74)] # max 76 rows for each table
         dataframe_data = [{e.competition.name: [] for e in t_events} for t_events in tables]
@@ -173,9 +173,13 @@ class QuoteToPDFView(View):
                         e.name,  # AVVENIMENTO
                     ) + quotes
                 )
-                
+        
+        start = time.time()      
         threads = [Thread(target=generate_table, args=[t_events, ind]) for ind, t_events in enumerate(tables)]
         [t.start() for t in threads]
+        [t.join() for t in threads]
+        end = time.time()
+        print('GENERAZIONE TABELLE', (end-start))
 
         # METHOD 2
         class Column:
@@ -185,7 +189,8 @@ class QuoteToPDFView(View):
 
             def __str__(self):
                 return self.name + ' ' + ','.join(self.sub_columns)
-
+            
+        start = time.time() 
         cols = [
             Column('MANIFESTAZIONE'),
             Column('DATA'),
@@ -197,7 +202,9 @@ class QuoteToPDFView(View):
         [to_add[qt.get_super_quote.upper()].append(qt.get_sub_quote.upper())
          for qt in quote_types]
         cols += [Column(key, val) for key, val in to_add.items()]
-        [t.join() for t in threads]
+        end = time.time()
+        print('GENERAZIONE COLONNE', (end-start))
+        
         context = {
             'tables_data': dataframe_data,
             'columns': cols,
