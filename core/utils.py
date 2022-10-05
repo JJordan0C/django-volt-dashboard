@@ -18,7 +18,7 @@ def fetch_resources(uri, rel):
  
 def generate_pdf(template_name, context_dict={}, filename=''):
     html = render_to_string(template_name, context_dict)
-    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    path_wkhtmltopdf = r'/bin/wkhtmltopdf'
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     options = {
         "enable-local-file-access": None,

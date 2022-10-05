@@ -7,6 +7,10 @@ services:
     build: .
     networks:
       - web_network
+    command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
+    cpus: 2.0
+    mem_reservation: "10M"
+    mem_limit: "3584M"
   nginx:
     container_name: nginx
     restart: always

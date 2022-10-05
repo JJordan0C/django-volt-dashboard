@@ -72,7 +72,7 @@ class QuoteToPDFView(View):
     
     # method_decorator(cache_page(60 * 60))
     def post(self, request):
-        setlocale(LC_ALL, "it_IT")
+        setlocale(LC_ALL, "it_IT.UTF-8")
         
         # data = {
         #     #'quote_type_ids': range(150, 167),
