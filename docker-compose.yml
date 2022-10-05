@@ -1,13 +1,15 @@
 version: '3'
 services:
-  appseed-app:
+  topbet-app:
     container_name: app
     restart: always
-    env_file: .env
-    build: .
-    networks:
-      - web_network
-    # command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
+    build: 
+      context: ./
+    command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
+    volumes:
+      - .:/topbet
+    ports:
+      - 8000:8000
     cpus: 2.0
     mem_reservation: "10M"
     mem_limit: "3584M"
@@ -16,14 +18,10 @@ services:
     restart: always
     image: "nginx:latest"
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
     volumes:
       - ./nginx:/etc/nginx/conf.d
-    networks:
-      - web_network
     depends_on: 
-      - appseed-app
-networks:
-  web_network:
-    driver: bridge
+      - topbet-app
  
