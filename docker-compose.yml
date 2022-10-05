@@ -1,11 +1,12 @@
 version: '3'
 services:
-  topbet-app:
-    container_name: app
+  webapp:
+    container_name: webapp
     restart: always
     build: 
       context: ./
-    command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
+    # command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
+    command: bash -c "gunicorn -b 0.0.0.0:8000 -k gevent --worker-tmp-dir /dev/shm core.wsgi:application"
     volumes:
       - .:/topbet
     ports:
@@ -13,20 +14,24 @@ services:
     cpus: 2.0
     mem_reservation: "10M"
     mem_limit: "3584M"
+    
   nginx:
     container_name: nginx
     restart: always
-    image: "nginx:latest"
+    image: "nginx:stable"
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./certbot/www:/var/www/certbot/
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
     depends_on: 
-      - topbet-app
+      - webapp
+
   certbot:
-    image: certbot/certbot:latest
-    volumes:
+    image: certbot/certbot
+    container_name: certbot
+    volumes: 
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
