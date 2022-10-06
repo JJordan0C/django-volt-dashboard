@@ -1,37 +1,39 @@
 version: '3'
 services:
-  webapp:
-    container_name: webapp
+  nginx:
     restart: always
     build: 
+      context: ./nginx
+    container_name: webserver
+    image: "nginx:1.15-alpine"
+    depends_on: 
+      - webapp
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf/:/etc/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+
+  webapp:
+    restart: always
+    build:
       context: ./
     # command: bash -c "gunicorn --config gunicorn-cfg.py core.wsgi"
     command: bash -c "gunicorn -b 0.0.0.0:8000 -k gevent --worker-tmp-dir /dev/shm core.wsgi:application"
+    container_name: webapp
     volumes:
       - .:/topbet
     ports:
-      - 8000:8000
+      - '8000:8000'
     cpus: 2.0
     mem_reservation: "10M"
     mem_limit: "3584M"
     
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:stable"
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./certbot/www:/var/www/certbot/
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
-    depends_on: 
-      - webapp
-
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes: 
-  #     - ./certbot/www/:/var/www/certbot/:rw
-  #     - ./certbot/conf/:/etc/letsencrypt/:rw
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes: 
+      - ./certbot/www/:/var/www/certbot
+      - ./certbot/conf/:/etc/letsencrypt

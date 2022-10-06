@@ -50,5 +50,3 @@ ENV VIRTUAL_ENV=/home/topbet/venv
 ENV PATH="/home/topbet/venv/bin:$PATH"
 
 RUN python manage.py migrate
-
-# CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
